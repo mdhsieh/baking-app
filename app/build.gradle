@@ -39,7 +39,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
 
     // Gson used to convert JSON to Java objects
-    implementation 'com.google.code.gson:gson:2.8.6'
+    //implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
 
     // Picasso used to download and display images
     // implementation 'com.squareup.picasso:picasso:2.71828'

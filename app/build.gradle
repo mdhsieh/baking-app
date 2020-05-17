@@ -31,4 +31,16 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    // RecyclerView dependency
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
+    // Retrofit used as HTTP client to get online JSON data
+    implementation 'com.squareup.retrofit2:retrofit:2.8.1'
+
+    // Gson used to convert JSON to Java objects
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+    // Picasso used to download and display images
+    // implementation 'com.squareup.picasso:picasso:2.71828'
 }

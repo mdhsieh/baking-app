@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.internal.EverythingIsNonNull;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -38,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 if (response.isSuccessful()) {
-                    //Log.d(TAG, "recipe data: " + response.body());
                     generateRecipeList(response.body());
                 }
                 else {

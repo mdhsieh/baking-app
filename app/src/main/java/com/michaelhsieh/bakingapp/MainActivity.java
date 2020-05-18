@@ -1,9 +1,12 @@
 package com.michaelhsieh.bakingapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.internal.EverythingIsNonNull;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -20,42 +23,53 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
+    private RecyclerView recyclerView;
+    private RecipeAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*Create handle for the RetrofitInstance interface*/
+        /* Create handle for the RetrofitInstance interface */
         GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
         Call<List<Recipe>> call = service.getAllRecipes();
         call.enqueue(new Callback<List<Recipe>>() {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 if (response.isSuccessful()) {
-                    //Toast.makeText(MainActivity.this, "Server returned data", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "Server returned data");
-                    Log.d(TAG, "recipe data: " + response.body());
+                    //Log.d(TAG, "recipe data: " + response.body());
+                    generateRecipeList(response.body());
                 }
                 else {
-                    //Toast.makeText(MainActivity.this, "Server returned an error", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "Server returned an error: " + response.errorBody());
+                    Log.e(TAG, "server returned an error: " + response.errorBody());
                 }
             }
 
             // Throwable t is the actual error object
+            // Check whether the error is because of network failure or JSON to model (Java classes) conversion
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
                 Toast.makeText(MainActivity.this, "Something went wrong. Please try again later!", Toast.LENGTH_SHORT).show();
                 if (t instanceof IOException) {
-                    //Toast.makeText(MainActivity.this, "this is an actual network failure :( inform the user and possibly retry", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "network failure occurred");
+                    // A network failure. Inform the user and possibly retry.
+                    Log.e(TAG, "network failure occurred");
                 }
                 else {
-                    //Toast.makeText(MainActivity.this, "conversion issue! big problems :(", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "conversion issue");
+                    // conversion issue from JSON to model
                     Log.e(TAG, "conversion error is: " + t);
                 }
             }
         });
     }
+
+    /* Method to generate List of Recipes using RecyclerView with custom adapter */
+    private void generateRecipeList(List<Recipe> recipeList) {
+        recyclerView = findViewById(R.id.rv_recipes);
+        adapter = new RecipeAdapter(this, recipeList);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+    }
+
 }

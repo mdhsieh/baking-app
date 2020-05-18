@@ -5,8 +5,10 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-/* Contains the Recipe class and classes used by Recipe.
+/* Contains the Recipe class and classes used within Recipe.
     Each class matches one of the JSON values from the online JSON data.
+
+    This set of classes is the data model that stores the parsed online JSON data.
  */
 
 // -----------------------------------Recipe.java-----------------------------------

@@ -9,6 +9,8 @@ import retrofit2.Response;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.michaelhsieh.bakingapp.model.Recipe;
@@ -25,10 +27,16 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecipeAdapter adapter;
 
+    private ProgressBar loadingIndicator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // show that the recipes are loading
+        loadingIndicator = findViewById(R.id.pb_loading);
+        loadingIndicator.setVisibility(View.VISIBLE);
 
         /* Create handle for the RetrofitInstance interface */
         GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
@@ -36,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Recipe>>() {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                // finished loading
+                loadingIndicator.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
                     generateRecipeList(response.body());
                 }
@@ -48,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
             // Check whether the error is because of network failure or JSON to model (Java classes) conversion
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
+                // finished loading
+                loadingIndicator.setVisibility(View.GONE);
                 Toast.makeText(MainActivity.this, "Something went wrong. Please try again later!", Toast.LENGTH_SHORT).show();
                 if (t instanceof IOException) {
                     // A network failure. Inform the user and possibly retry.

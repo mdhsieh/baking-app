@@ -8,7 +8,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 
 /*
-    Interface that defines the endpoint URL and HTTP request method.
+    Interface that defines the endpoint URL and GET HTTP request method.
  */
 
 public interface GetDataService {

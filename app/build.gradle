@@ -48,6 +48,13 @@ dependencies {
     // Gson used to convert JSON to Java objects
     implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
 
+    // use OkHttp 3.12.+ to support devices below Android API 21
+    // "force" means the version of this dependency should be enforced in the case of version conflicts.
+    implementation("com.squareup.okhttp3:okhttp:3.12.0") {
+        force = true
+    }
+    implementation "com.squareup.okhttp3:logging-interceptor:3.12.0"
+
     // Picasso used to download and display images
     // implementation 'com.squareup.picasso:picasso:2.71828'
 }

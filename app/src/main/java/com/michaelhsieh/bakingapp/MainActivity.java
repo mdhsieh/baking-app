@@ -25,6 +25,9 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Ite
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
+    // Recipe key when sending Intent
+    private static final String EXTRA_RECIPE = "Recipe";
+
     private RecyclerView recyclerView;
     private RecipeAdapter adapter;
 
@@ -87,9 +90,12 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Ite
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(this, "You clicked " + adapter.getItem(position).getName() + " on row number " + position, Toast.LENGTH_SHORT).show();
+        // get the recipe that was clicked
+        Recipe recipe = adapter.getItem(position);
+        Toast.makeText(this, "You clicked " + recipe.getName() + " on row number " + position, Toast.LENGTH_SHORT).show();
         // launch the recipe details screen
         Intent launchDetailActivity = new Intent(this, DetailActivity.class);
+        launchDetailActivity.putExtra(EXTRA_RECIPE, recipe);
         startActivity(launchDetailActivity);
     }
 }

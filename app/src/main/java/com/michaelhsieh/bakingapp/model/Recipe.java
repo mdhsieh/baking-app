@@ -1,11 +1,15 @@
 package com.michaelhsieh.bakingapp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/* Contains the Recipe class and classes used within Recipe.
+/* The Model package contains the Recipe class and classes used within Recipe.
     Each class matches one of the JSON values from the online JSON data.
 
     This set of classes is the data model that stores the parsed online JSON data.
@@ -13,7 +17,7 @@ import java.util.List;
 
 // -----------------------------------Recipe.java-----------------------------------
 
-public class Recipe {
+public class Recipe implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -23,10 +27,10 @@ public class Recipe {
     private String name;
     @SerializedName("ingredients")
     @Expose
-    private List<Ingredient> ingredients = null;
+    private List<Ingredient> ingredients = new ArrayList<>();
     @SerializedName("steps")
     @Expose
-    private List<Step> steps = null;
+    private List<Step> steps = new ArrayList<>();
     @SerializedName("servings")
     @Expose
     private Integer servings;
@@ -82,105 +86,46 @@ public class Recipe {
         this.image = image;
     }
 
-}
+    /* everything below here is for implementing Parcelable */
 
-// -----------------------------------Ingredient.java-----------------------------------
+    /* in the case you have more than one field to retrieve from a given Parcel,
+    you must do this in the same order you put them in (that is, in a FIFO approach) */
 
-class Ingredient {
-
-    @SerializedName("quantity")
-    @Expose
-    private Double quantity;
-    @SerializedName("measure")
-    @Expose
-    private String measure;
-    @SerializedName("ingredient")
-    @Expose
-    private String ingredient;
-
-    public Double getQuantity() {
-        return quantity;
+    // 99.9% of the time you can just ignore this
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setQuantity(Double quantity) {
-        this.quantity = quantity;
+    // write your object's data to the passed-in Parcel
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeInt(id);
+        out.writeString(name);
+        out.writeList(ingredients);
+        out.writeList(steps);
+        out.writeInt(servings);
+        out.writeString(image);
     }
 
-    public String getMeasure() {
-        return measure;
+    // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
+    public static final Parcelable.Creator<Recipe> CREATOR = new Parcelable.Creator<Recipe>() {
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
+
+    // example constructor that takes a Parcel and gives you an object populated with its values
+    private Recipe(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        in.readList(ingredients, Ingredient.class.getClassLoader());
+        in.readList(steps, Step.class.getClassLoader());
+        servings = in.readInt();
+        image = in.readString();
     }
-
-    public void setMeasure(String measure) {
-        this.measure = measure;
-    }
-
-    public String getIngredient() {
-        return ingredient;
-    }
-
-    public void setIngredient(String ingredient) {
-        this.ingredient = ingredient;
-    }
-
-}
-// -----------------------------------com.Step.java-----------------------------------
-
-class Step {
-
-    @SerializedName("id")
-    @Expose
-    private Integer id;
-    @SerializedName("shortDescription")
-    @Expose
-    private String shortDescription;
-    @SerializedName("description")
-    @Expose
-    private String description;
-    @SerializedName("videoURL")
-    @Expose
-    private String videoURL;
-    @SerializedName("thumbnailURL")
-    @Expose
-    private String thumbnailURL;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getShortDescription() {
-        return shortDescription;
-    }
-
-    public void setShortDescription(String shortDescription) {
-        this.shortDescription = shortDescription;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getVideoURL() {
-        return videoURL;
-    }
-
-    public void setVideoURL(String videoURL) {
-        this.videoURL = videoURL;
-    }
-
-    public String getThumbnailURL() {
-        return thumbnailURL;
-    }
-
-    public void setThumbnailURL(String thumbnailURL) {
-        this.thumbnailURL = thumbnailURL;
-    }
-
 }

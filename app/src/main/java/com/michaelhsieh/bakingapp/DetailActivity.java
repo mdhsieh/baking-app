@@ -1,6 +1,9 @@
 package com.michaelhsieh.bakingapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +18,7 @@ import java.util.List;
 // the recipe details fragment with selected step details fragment
 public class DetailActivity extends AppCompatActivity {
 
-    public static final String TAG = DetailActivity.class.getSimpleName();
+    private static final String TAG = DetailActivity.class.getSimpleName();
 
     // Recipe key when retrieving Intent
     private static final String EXTRA_RECIPE = "Recipe";
@@ -29,12 +32,18 @@ public class DetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Recipe recipe = intent.getParcelableExtra(EXTRA_RECIPE);
 
-        if (recipe != null) {
+        /*if (recipe != null) {
             List<Ingredient> ingredients = recipe.getIngredients();
             for (Ingredient ingredient : ingredients) {
                 Log.d(TAG, ingredient.getQuantity() + " " + ingredient.getMeasure() +
                         " " + ingredient.getIngredient());
             }
-        }
+        }*/
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Fragment fragment = RecipeDetailsFragment.newInstance(recipe);
+        fragmentTransaction.replace(R.id.recipe_details_fragment, fragment);
+        fragmentTransaction.commit();
     }
 }

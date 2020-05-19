@@ -4,9 +4,16 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.michaelhsieh.bakingapp.model.Ingredient;
+import com.michaelhsieh.bakingapp.model.Recipe;
+
+import java.util.List;
 
 
 /** This fragment displays a selected recipe in more detail.
@@ -18,14 +25,13 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class RecipeDetailsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String TAG = RecipeDetailsFragment.class.getSimpleName();
+
+    // Recipe key when retrieving Intent from Activity
+    private static final String EXTRA_RECIPE = "Recipe";
+
+    private Recipe recipe;
 
     public RecipeDetailsFragment() {
         // Required empty public constructor
@@ -36,15 +42,12 @@ public class RecipeDetailsFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment RecipeDetailFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static RecipeDetailsFragment newInstance(String param1, String param2) {
+    public static RecipeDetailsFragment newInstance(Recipe param1) {
         RecipeDetailsFragment fragment = new RecipeDetailsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelable(EXTRA_RECIPE, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,8 +56,7 @@ public class RecipeDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            recipe = getArguments().getParcelable(EXTRA_RECIPE);
         }
     }
 
@@ -63,6 +65,22 @@ public class RecipeDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.fragment_recipe_details, container, false);
+
+        TextView ingredientsDisplay = (TextView) rootView.findViewById(R.id.tv_recipe_ingredients);
+
+        ingredientsDisplay.append("Ingredients: " + "\n" + "\n");
+
+        String recipeLine;
+
+        if (recipe != null) {
+            List<Ingredient> ingredients = recipe.getIngredients();
+            for (Ingredient ingredient : ingredients) {
+                recipeLine = ingredient.getQuantity() + " " + ingredient.getMeasure() +
+                        " " + ingredient.getIngredient() + "\n";
+                ingredientsDisplay.append(recipeLine);
+                Log.d(TAG, recipeLine);
+            }
+        }
 
         return rootView;
     }

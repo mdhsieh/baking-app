@@ -23,7 +23,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.ItemClickListener {
 
-    public static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     // Recipe key when sending Intent
     private static final String EXTRA_RECIPE = "Recipe";

@@ -7,6 +7,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,7 +21,7 @@ import com.michaelhsieh.bakingapp.network.RetrofitClientInstance;
 import java.io.IOException;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecipeAdapter.ItemClickListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
@@ -75,11 +76,20 @@ public class MainActivity extends AppCompatActivity {
 
     /* Method to generate List of Recipes using RecyclerView with custom adapter */
     private void generateRecipeList(List<Recipe> recipeList) {
+        // set up the RecyclerView
         recyclerView = findViewById(R.id.rv_recipes);
         adapter = new RecipeAdapter(this, recipeList);
+        adapter.setClickListener(this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }
 
+    @Override
+    public void onItemClick(View view, int position) {
+        Toast.makeText(this, "You clicked " + adapter.getItem(position).getName() + " on row number " + position, Toast.LENGTH_SHORT).show();
+        // launch the recipe details screen
+        Intent launchDetailActivity = new Intent(this, DetailActivity.class);
+        startActivity(launchDetailActivity);
+    }
 }

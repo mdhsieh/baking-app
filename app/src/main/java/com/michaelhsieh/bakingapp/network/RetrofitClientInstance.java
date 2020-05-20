@@ -3,8 +3,8 @@ package com.michaelhsieh.bakingapp.network;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/*
-    Create the Retrofit object used to make requests.
+/** Create the Retrofit object used to make requests.
+ *
  */
 public class RetrofitClientInstance {
 

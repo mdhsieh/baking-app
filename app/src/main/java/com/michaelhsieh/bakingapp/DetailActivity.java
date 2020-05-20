@@ -7,15 +7,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
-import com.michaelhsieh.bakingapp.model.Ingredient;
 import com.michaelhsieh.bakingapp.model.Recipe;
 
-import java.util.List;
-
-// This will display either the recipe details fragment or
-// the recipe details fragment with selected step details fragment
+/** This will display either the recipe steps master list fragment or
+ * the recipe steps master list fragment with selected step details fragment
+ */
 public class DetailActivity extends AppCompatActivity {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
@@ -32,17 +29,9 @@ public class DetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Recipe recipe = intent.getParcelableExtra(EXTRA_RECIPE);
 
-        /*if (recipe != null) {
-            List<Ingredient> ingredients = recipe.getIngredients();
-            for (Ingredient ingredient : ingredients) {
-                Log.d(TAG, ingredient.getQuantity() + " " + ingredient.getMeasure() +
-                        " " + ingredient.getIngredient());
-            }
-        }*/
-
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        Fragment fragment = RecipeDetailsFragment.newInstance(recipe);
+        Fragment fragment = RecipeStepsListFragment.newInstance(recipe);
         fragmentTransaction.replace(R.id.recipe_details_fragment, fragment);
         fragmentTransaction.commit();
     }

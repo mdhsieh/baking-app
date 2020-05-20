@@ -7,7 +7,7 @@
     android:layout_height="200dp"
     android:layout_margin="16dp"
     card_view:cardCornerRadius="4dp"
-    card_view:cardElevation="8dp">
+    card_view:cardElevation="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,8 +20,7 @@
             android:textStyle="bold"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            tools:text="Nutella Pie"
-            />
+            tools:text="Nutella Pie"/>
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

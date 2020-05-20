@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Ite
         loadingIndicator = findViewById(R.id.pb_loading);
         loadingIndicator.setVisibility(View.VISIBLE);
 
-        /* Create handle for the RetrofitInstance interface */
+        // create a GetDataService object
         GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
         Call<List<Recipe>> call = service.getAllRecipes();
         call.enqueue(new Callback<List<Recipe>>() {
@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Ite
     public void onItemClick(View view, int position) {
         // get the recipe that was clicked
         Recipe recipe = adapter.getItem(position);
-        Toast.makeText(this, "You clicked " + recipe.getName() + " on row number " + position, Toast.LENGTH_SHORT).show();
         // launch the recipe details screen
         Intent launchDetailActivity = new Intent(this, DetailActivity.class);
         launchDetailActivity.putExtra(EXTRA_RECIPE, recipe);

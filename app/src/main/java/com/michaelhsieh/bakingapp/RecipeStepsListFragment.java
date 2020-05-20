@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.michaelhsieh.bakingapp.model.Ingredient;
 import com.michaelhsieh.bakingapp.model.Recipe;
+import com.michaelhsieh.bakingapp.model.Step;
 
 import java.util.List;
 
@@ -21,19 +22,19 @@ import java.util.List;
  * This is the master list fragment in the master-detail flow of the tablet layout.
  *
  * A simple {@link Fragment} subclass.
- * Use the {@link RecipeDetailsFragment#newInstance} factory method to
+ * Use the {@link RecipeStepsListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RecipeDetailsFragment extends Fragment {
+public class RecipeStepsListFragment extends Fragment {
 
-    private static final String TAG = RecipeDetailsFragment.class.getSimpleName();
+    private static final String TAG = RecipeStepsListFragment.class.getSimpleName();
 
     // Recipe key when retrieving Intent from Activity
     private static final String EXTRA_RECIPE = "Recipe";
 
     private Recipe recipe;
 
-    public RecipeDetailsFragment() {
+    public RecipeStepsListFragment() {
         // Required empty public constructor
     }
 
@@ -41,11 +42,11 @@ public class RecipeDetailsFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
+     * @param param1 The Recipe to get ingredients and steps from.
      * @return A new instance of fragment RecipeDetailFragment.
      */
-    public static RecipeDetailsFragment newInstance(Recipe param1) {
-        RecipeDetailsFragment fragment = new RecipeDetailsFragment();
+    public static RecipeStepsListFragment newInstance(Recipe param1) {
+        RecipeStepsListFragment fragment = new RecipeStepsListFragment();
         Bundle args = new Bundle();
         args.putParcelable(EXTRA_RECIPE, param1);
         fragment.setArguments(args);
@@ -64,21 +65,32 @@ public class RecipeDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView =  inflater.inflate(R.layout.fragment_recipe_details, container, false);
+        View rootView =  inflater.inflate(R.layout.fragment_recipe_steps_list, container, false);
 
         TextView ingredientsDisplay = (TextView) rootView.findViewById(R.id.tv_recipe_ingredients);
 
+        // add title to text
         ingredientsDisplay.append("Ingredients: " + "\n" + "\n");
 
-        String recipeLine;
+        // String to store ingredient quantity, measure, and name in one line
+        String ingredientInfo;
+
+        String shortDescription;
 
         if (recipe != null) {
             List<Ingredient> ingredients = recipe.getIngredients();
+            List<Step> steps = recipe.getSteps();
+            // append each ingredient on a separate line
             for (Ingredient ingredient : ingredients) {
-                recipeLine = ingredient.getQuantity() + " " + ingredient.getMeasure() +
+                ingredientInfo = ingredient.getQuantity() + " " + ingredient.getMeasure() +
                         " " + ingredient.getIngredient() + "\n";
-                ingredientsDisplay.append(recipeLine);
-                Log.d(TAG, recipeLine);
+                ingredientsDisplay.append(ingredientInfo);
+                //Log.d(TAG, ingredientInfo);
+            }
+
+            for (Step step : steps) {
+                shortDescription = step.getShortDescription();
+                Log.d(TAG, shortDescription);
             }
         }
 

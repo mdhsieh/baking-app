@@ -26,7 +26,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.recyclerview_row, parent, false);
+        View view = inflater.inflate(R.layout.recipe_item, parent, false);
         return new ViewHolder(view);
     }
 

@@ -37,9 +37,9 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
 
     private Recipe recipe;
 
-    /*private RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     private RecipeStepsListAdapter adapter;
-    private RecyclerView.LayoutManager layoutManager;*/
+    private RecyclerView.LayoutManager layoutManager;
 
     public RecipeStepsListFragment() {
         // Required empty public constructor
@@ -76,10 +76,10 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
 
         TextView ingredientsDisplay = (TextView) rootView.findViewById(R.id.tv_recipe_ingredients);
 
-        /*recyclerView = rootView.findViewById(R.id.rv_recipe_steps);
+        recyclerView = rootView.findViewById(R.id.rv_recipe_steps);
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);*/
+        recyclerView.setLayoutManager(layoutManager);
 
         // clear text
         //ingredientsDisplay.setText("");
@@ -103,9 +103,9 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
             List<Step> steps = recipe.getSteps();
 
             // specify the adapter
-            /*adapter = new RecipeStepsListAdapter(getContext(), steps);
+            adapter = new RecipeStepsListAdapter(getContext(), steps);
             adapter.setClickListener(this);
-            recyclerView.setAdapter(adapter);*/
+            recyclerView.setAdapter(adapter);
         }
 
         return rootView;
@@ -113,7 +113,7 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
 
     @Override
     public void onRecipeStepItemClick(View view, int position) {
-        /*Step step = adapter.getItem(position);
-        Toast.makeText(getContext(), "You clicked " + step.getShortDescription() + " on row number " + position, Toast.LENGTH_SHORT).show();*/
+        Step step = adapter.getItem(position);
+        Toast.makeText(getContext(), "You clicked " + step.getShortDescription() + " on row number " + position, Toast.LENGTH_SHORT).show();
     }
 }

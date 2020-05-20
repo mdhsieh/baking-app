@@ -6,6 +6,6 @@
     android:name="com.michaelhsieh.bakingapp.RecipeStepsListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/recipe_details_fragment"
+    android:id="@+id/recipe_steps_list_fragment"
     tools:layout="@layout/fragment_recipe_steps_list">
 </fragment>

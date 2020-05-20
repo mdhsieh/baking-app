@@ -2,12 +2,15 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_view_recipe"
+    android:id="@+id/card_view_recipe_step"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:layout_margin="16dp"
+    android:layout_height="100dp"
+    android:layout_margin="8dp"
     card_view:cardCornerRadius="4dp"
     card_view:cardElevation="4dp">
+
+    <!--android:layout_height="50dp"
+    android:layout_margin="16dp"-->
 
     <TextView
         android:id="@+id/tv_step_short_desc"

@@ -3,12 +3,15 @@ package com.michaelhsieh.bakingapp;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.michaelhsieh.bakingapp.model.Ingredient;
 import com.michaelhsieh.bakingapp.model.Recipe;
@@ -25,7 +28,7 @@ import java.util.List;
  * Use the {@link RecipeStepsListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RecipeStepsListFragment extends Fragment {
+public class RecipeStepsListFragment extends Fragment implements RecipeStepsListAdapter.ItemClickListener {
 
     private static final String TAG = RecipeStepsListFragment.class.getSimpleName();
 
@@ -33,6 +36,10 @@ public class RecipeStepsListFragment extends Fragment {
     private static final String EXTRA_RECIPE = "Recipe";
 
     private Recipe recipe;
+
+    /*private RecyclerView recyclerView;
+    private RecipeStepsListAdapter adapter;
+    private RecyclerView.LayoutManager layoutManager;*/
 
     public RecipeStepsListFragment() {
         // Required empty public constructor
@@ -69,31 +76,44 @@ public class RecipeStepsListFragment extends Fragment {
 
         TextView ingredientsDisplay = (TextView) rootView.findViewById(R.id.tv_recipe_ingredients);
 
+        /*recyclerView = rootView.findViewById(R.id.rv_recipe_steps);
+        // use a linear layout manager
+        layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);*/
+
+        // clear text
+        //ingredientsDisplay.setText("");
+
         // add title to text
         ingredientsDisplay.append("Ingredients: " + "\n" + "\n");
 
         // String to store ingredient quantity, measure, and name in one line
         String ingredientInfo;
 
-        String shortDescription;
-
         if (recipe != null) {
             List<Ingredient> ingredients = recipe.getIngredients();
-            List<Step> steps = recipe.getSteps();
+
             // append each ingredient on a separate line
             for (Ingredient ingredient : ingredients) {
                 ingredientInfo = ingredient.getQuantity() + " " + ingredient.getMeasure() +
                         " " + ingredient.getIngredient() + "\n";
                 ingredientsDisplay.append(ingredientInfo);
-                //Log.d(TAG, ingredientInfo);
             }
 
-            for (Step step : steps) {
-                shortDescription = step.getShortDescription();
-                Log.d(TAG, shortDescription);
-            }
+            List<Step> steps = recipe.getSteps();
+
+            // specify the adapter
+            /*adapter = new RecipeStepsListAdapter(getContext(), steps);
+            adapter.setClickListener(this);
+            recyclerView.setAdapter(adapter);*/
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onRecipeStepItemClick(View view, int position) {
+        /*Step step = adapter.getItem(position);
+        Toast.makeText(getContext(), "You clicked " + step.getShortDescription() + " on row number " + position, Toast.LENGTH_SHORT).show();*/
     }
 }

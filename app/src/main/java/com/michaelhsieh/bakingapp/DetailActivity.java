@@ -32,7 +32,7 @@ public class DetailActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Fragment fragment = RecipeStepsListFragment.newInstance(recipe);
-        fragmentTransaction.replace(R.id.recipe_details_fragment, fragment);
+        fragmentTransaction.replace(R.id.recipe_steps_list_fragment, fragment);
         fragmentTransaction.commit();
     }
 }

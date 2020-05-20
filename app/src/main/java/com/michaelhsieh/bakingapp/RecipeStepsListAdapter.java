@@ -1,7 +1,6 @@
 package com.michaelhsieh.bakingapp;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,6 @@ import java.util.List;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class RecipeStepsListAdapter extends RecyclerView.Adapter<RecipeStepsListAdapter.ViewHolder> {
-
-    private static final String TAG = RecipeStepsListAdapter.class.getSimpleName();
 
     private List<Step> steps;
     private LayoutInflater inflater;
@@ -38,7 +35,6 @@ public class RecipeStepsListAdapter extends RecyclerView.Adapter<RecipeStepsList
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Step step = steps.get(position);
-        //Log.d(TAG, step.getShortDescription());
         holder.stepDisplay.setText(step.getShortDescription());
     }
 

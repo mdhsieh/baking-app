@@ -22,7 +22,7 @@ import java.util.List;
 
 /** This fragment displays a selected recipe in more detail.
  * The user can view the recipe's ingredients and select one of the recipe steps.
- * This is the master list fragment in the master-detail flow of the tablet layout.
+ * This is the master list fragment in the master/detail flow of the tablet layout.
  *
  * A simple {@link Fragment} subclass.
  * Use the {@link RecipeStepsListFragment#newInstance} factory method to
@@ -76,13 +76,11 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
 
         TextView ingredientsDisplay = (TextView) rootView.findViewById(R.id.tv_recipe_ingredients);
 
+        // set up the RecyclerView
         recyclerView = rootView.findViewById(R.id.rv_recipe_steps);
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-
-        // clear text
-        //ingredientsDisplay.setText("");
 
         // add title to text
         ingredientsDisplay.append("Ingredients: " + "\n" + "\n");

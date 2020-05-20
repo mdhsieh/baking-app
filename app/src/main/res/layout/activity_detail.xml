@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Display the RecipeStepsList fragment. -->
-<!--<fragment
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:name="com.michaelhsieh.bakingapp.RecipeStepsListFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/recipe_steps_list_fragment"
-    tools:layout="@layout/fragment_recipe_steps_list">
-</fragment>-->
+<!-- FrameLayout is a container to hold the fragment -->
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/recipe_steps_list_fragment_container"
+    android:id="@+id/recipe_steps_list_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    tools:layout="@layout/fragment_recipe_steps_list"/>

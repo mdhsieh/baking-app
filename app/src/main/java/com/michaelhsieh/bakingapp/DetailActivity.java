@@ -10,8 +10,11 @@ import android.os.Bundle;
 
 import com.michaelhsieh.bakingapp.model.Recipe;
 
-/** This will display either the recipe steps master list fragment or
- * the recipe steps master list fragment with selected step details fragment
+/** This Activity uses a master/detail flow to change its display depending on device size.
+ *
+ * On smaller devices, this will display the recipe steps list only.
+ * On larger devices like tablets, this will display a two-pane layout. That is,
+ * The recipe steps list will be displayed together with the selected step details.
  */
 public class DetailActivity extends AppCompatActivity {
 
@@ -32,7 +35,7 @@ public class DetailActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Fragment fragment = RecipeStepsListFragment.newInstance(recipe);
-        fragmentTransaction.replace(R.id.recipe_steps_list_fragment_container, fragment);
+        fragmentTransaction.replace(R.id.recipe_steps_list_container, fragment);
         fragmentTransaction.commit();
     }
 }

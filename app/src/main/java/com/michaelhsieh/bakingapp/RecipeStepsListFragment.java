@@ -1,5 +1,6 @@
 package com.michaelhsieh.bakingapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -20,7 +21,7 @@ import com.michaelhsieh.bakingapp.model.Step;
 import java.util.List;
 
 
-/** This fragment displays a selected recipe in more detail.
+/** This fragment displays a selected recipe's steps in one list.
  * The user can view the recipe's ingredients and select one of the recipe steps.
  * This is the master list fragment in the master/detail flow of the tablet layout.
  *
@@ -32,9 +33,14 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
 
     private static final String TAG = RecipeStepsListFragment.class.getSimpleName();
 
-    // Recipe key when retrieving Intent from Activity
-    private static final String EXTRA_RECIPE = "Recipe";
+    // Step key when sending Intent
+    private static final String EXTRA_STEP = "Step";
 
+    // parameter argument with name that matches
+    // the fragment initialization parameters
+    private static final String ARG_RECIPE = "Recipe";
+
+    // parameter of type Recipe
     private Recipe recipe;
 
     private RecyclerView recyclerView;
@@ -55,7 +61,7 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
     public static RecipeStepsListFragment newInstance(Recipe param1) {
         RecipeStepsListFragment fragment = new RecipeStepsListFragment();
         Bundle args = new Bundle();
-        args.putParcelable(EXTRA_RECIPE, param1);
+        args.putParcelable(ARG_RECIPE, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,7 +70,7 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            recipe = getArguments().getParcelable(EXTRA_RECIPE);
+            recipe = getArguments().getParcelable(ARG_RECIPE);
         }
     }
 
@@ -111,7 +117,14 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
 
     @Override
     public void onRecipeStepItemClick(View view, int position) {
+
+        // get the recipe step that was clicked
         Step step = adapter.getItem(position);
         Toast.makeText(getContext(), "You clicked " + step.getShortDescription() + " on row number " + position, Toast.LENGTH_SHORT).show();
+        // launch the recipe step details screen
+        Intent launchStepDetailsActivity = new Intent(getActivity(), RecipeStepDetailsActivity.class);
+        launchStepDetailsActivity.putExtra(EXTRA_STEP, step);
+        startActivity(launchStepDetailsActivity);
+
     }
 }

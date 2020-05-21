@@ -120,7 +120,7 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
 
         // get the recipe step that was clicked
         Step step = adapter.getItem(position);
-        Toast.makeText(getContext(), "You clicked " + step.getShortDescription() + " on row number " + position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "You clicked " + step.getShortDescription() + " on row number " + position, Toast.LENGTH_SHORT).show();
         // launch the recipe step details screen
         Intent launchStepDetailsActivity = new Intent(getActivity(), RecipeStepDetailsActivity.class);
         launchStepDetailsActivity.putExtra(EXTRA_STEP, step);

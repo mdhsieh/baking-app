@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Ite
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
                 // finished loading
                 loadingIndicator.setVisibility(View.GONE);
-                Toast.makeText(MainActivity.this, "Something went wrong. Please try again later!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Something went wrong. Please try again later!", Toast.LENGTH_LONG).show();
                 if (t instanceof IOException) {
                     // A network failure. Inform the user and possibly retry.
                     Log.e(TAG, "network failure occurred");

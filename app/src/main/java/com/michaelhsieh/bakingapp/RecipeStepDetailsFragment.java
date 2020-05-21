@@ -89,16 +89,25 @@ public class RecipeStepDetailsFragment extends Fragment {
 
         // Initialize the player.
         String videoUrl = step.getVideoURL();
+        /* In the online JSON data, step 5 of Nutella Pie has its video URL misplaced
+        in the thumbnail URL instead. Use this thumbnail URL if it's available and
+        the video URL is not available.
+         */
+        String thumbnailURL = step.getThumbnailURL();
         Log.d(TAG, "video url is: " + videoUrl);
-        if (videoUrl.isEmpty()) {
+        if (videoUrl.isEmpty() && thumbnailURL.isEmpty()) {
             Log.d(TAG, "empty url");
             mPlayerView.setVisibility(View.GONE);
         }
+        else if (videoUrl.isEmpty() && !thumbnailURL.isEmpty()) {
+            mPlayerView.setVisibility(View.VISIBLE);
+            initializePlayer(Uri.parse(thumbnailURL));
+            Log.d(TAG, "initializing ExoPlayer with thumbnail URL");
+        }
         else {
             mPlayerView.setVisibility(View.VISIBLE);
-            Log.d(TAG, "initializing ExoPlayer");
             initializePlayer(Uri.parse(videoUrl));
-            Log.d(TAG, "finished initializing ExoPlayer");
+            Log.d(TAG, "initialized ExoPlayer");
         }
 
         return rootView;

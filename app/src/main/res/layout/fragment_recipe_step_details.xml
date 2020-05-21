@@ -25,6 +25,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/playerView"
+        android:gravity="start"
+        android:textSize="18sp"
         tools:text="Recipe step description"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -57,4 +57,7 @@ dependencies {
 
     // Picasso used to download and display images
     // implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // ExoPlayer used to play video
+    implementation 'com.google.android.exoplayer:exoplayer:r2.2.0'
 }

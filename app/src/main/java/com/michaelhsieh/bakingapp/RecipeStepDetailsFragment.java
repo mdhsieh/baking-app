@@ -26,9 +26,8 @@ import com.google.android.exoplayer2.util.Util;
 import com.michaelhsieh.bakingapp.model.Step;
 
 
-/** This fragment displays a selected recipe step's video, or
- * a thumbnail image if the video is not available, and also
- * displays a more detailed description of the step.
+/** This fragment displays a selected recipe step's video
+ * and a more detailed description of the step.
  *
  * A simple {@link Fragment} subclass.
  * Use the {@link RecipeStepDetailsFragment#newInstance} factory method to
@@ -121,6 +120,12 @@ public class RecipeStepDetailsFragment extends Fragment {
     {
         if (mExoplayer == null)
         {
+
+            if (getContext() == null) {
+                Log.e(TAG, "null returned from getContext()");
+                throw new RuntimeException("null returned from getContext()");
+            }
+
             // Create an instance of the Exoplayer
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();

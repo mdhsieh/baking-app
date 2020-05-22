@@ -106,10 +106,29 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
 
             List<Step> steps = recipe.getSteps();
 
-            // specify the adapter
-            adapter = new RecipeStepsListAdapter(getContext(), steps);
-            adapter.setClickListener(this);
-            recyclerView.setAdapter(adapter);
+            /* Use isAdded to avoid a null pointer exception when the fragment is
+            detached from the activity. isAdded gives the same result as getActivity() == null.
+
+            For example:
+            When pressing the back button, the fragment is no longer attached to the activity,
+            so getContext() returns null.
+             */
+
+            /* For example:
+            If we open the fragment, push a task, and then quickly press back to return to
+            a previous activity, when the task is finished, it will try to access the
+            activity in onPostExecute() by calling the getActivity() method. If the check isn't
+            there the app will crash.
+             */
+            if (isAdded()) {
+                // specify the adapter
+                adapter = new RecipeStepsListAdapter(getContext(), steps);
+                adapter.setClickListener(this);
+                recyclerView.setAdapter(adapter);
+            }
+            else {
+                Log.e(TAG, "the fragment is not currently added to its activity");
+            }
         }
 
         return rootView;

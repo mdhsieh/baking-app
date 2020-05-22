@@ -11,6 +11,10 @@ import android.os.Bundle;
 import com.michaelhsieh.bakingapp.model.Recipe;
 import com.michaelhsieh.bakingapp.model.Step;
 
+/** This Activity is only launched with small screen sizes.
+ * It displays the selected recipe step details in a new screen.
+ *
+ */
 public class RecipeStepDetailsActivity extends AppCompatActivity {
 
     // Step key when retrieving Intent

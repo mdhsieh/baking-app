@@ -23,7 +23,7 @@ import com.michaelhsieh.bakingapp.model.Step;
 import java.util.List;
 
 
-/** This fragment displays a selected recipe's steps in one list.
+/** Displays a selected recipe's steps in one list.
  * The user can view the recipe's ingredients and select one of the recipe steps.
  * This is the master list fragment in the master/detail flow of the tablet layout.
  *
@@ -58,7 +58,7 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
     */
     public interface OnRecipeStepClickListener
     {
-        void onRecipeStepSelected(Step step);
+        void onRecipeStepSelected(int position);
     }
 
     public RecipeStepsListFragment() {
@@ -159,16 +159,9 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
     // called when a step in the RecipeStepsListAdapter is clicked
     @Override
     public void onRecipeStepItemClick(View view, int position) {
-        Step step = adapter.getItem(position);
+        // get the Step that was clicked
+        //Step step = adapter.getItem(position);
         // trigger the callback onRecipeStepSelected when an item is clicked
-        callback.onRecipeStepSelected(step);
-
-        /*// get the recipe step that was clicked
-        Step step = adapter.getItem(position);
-        //Toast.makeText(getContext(), "You clicked " + step.getShortDescription() + " on row number " + position, Toast.LENGTH_SHORT).show();
-        // launch the recipe step details screen
-        Intent launchStepDetailsActivity = new Intent(getActivity(), RecipeStepDetailsActivity.class);
-        launchStepDetailsActivity.putExtra(EXTRA_STEP, step);
-        startActivity(launchStepDetailsActivity);*/
+        callback.onRecipeStepSelected(position);
     }
 }

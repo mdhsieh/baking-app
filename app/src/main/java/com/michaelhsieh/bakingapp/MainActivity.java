@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Ite
         recyclerView.setAdapter(adapter);
     }
 
+    // called when a recipe in the RecipeAdapter is clicked
     @Override
     public void onItemClick(View view, int position) {
         // get the recipe that was clicked

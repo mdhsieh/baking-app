@@ -25,9 +25,12 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.michaelhsieh.bakingapp.model.Step;
 
+import java.util.ArrayList;
+import java.util.List;
 
-/** This fragment displays a selected recipe step's video
- * and a more detailed description of the step.
+
+/** Displays a selected recipe step's video and
+ * a more detailed description of the step.
  *
  * A simple {@link Fragment} subclass.
  * Use the {@link RecipeStepDetailsFragment#newInstance} factory method to
@@ -39,10 +42,13 @@ public class RecipeStepDetailsFragment extends Fragment {
 
     // parameter argument with name that matches
     // the fragment initialization parameters
-    private static final String ARG_STEP = "Step";
+    private static final String ARG_STEPS = "Steps";
+    private static final String ARG_LIST_ITEM_INDEX = "list_item_index";
 
-    // parameter of type Step
-    private Step step;
+    // parameter of type List of Steps
+    private List<Step> steps = new ArrayList<>();
+    // parameter of type int
+    private int listItemIndex;
 
     private SimpleExoPlayerView mPlayerView;
     private SimpleExoPlayer mExoplayer;
@@ -51,17 +57,23 @@ public class RecipeStepDetailsFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /* We are using the whole list of steps in newInstance because we will need to know
+     * the next and previous steps when next and previous buttons are clicked.
+     */
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param step The step to get video and description from.
+     * @param steps The list of steps to get video and description from.
+     * @param listItemIndex The index of the selected step.
      * @return A new instance of fragment RecipeStepDetailsFragment.
      */
-    public static RecipeStepDetailsFragment newInstance(Step step) {
+    public static RecipeStepDetailsFragment newInstance(ArrayList<Step> steps, int listItemIndex) {
         RecipeStepDetailsFragment fragment = new RecipeStepDetailsFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_STEP, step);
+        args.putParcelableArrayList(ARG_STEPS, steps);
+        args.putInt(ARG_LIST_ITEM_INDEX, listItemIndex);
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,7 +82,8 @@ public class RecipeStepDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            step = getArguments().getParcelable(ARG_STEP);
+            steps = getArguments().getParcelableArrayList(ARG_STEPS);
+            listItemIndex = getArguments().getInt(ARG_LIST_ITEM_INDEX);
         }
     }
 
@@ -81,18 +94,18 @@ public class RecipeStepDetailsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_recipe_step_details, container, false);
 
         TextView descriptionDisplay = rootView.findViewById(R.id.tv_step_long_desc);
-        descriptionDisplay.setText(step.getDescription());
+        descriptionDisplay.setText(steps.get(listItemIndex).getDescription());
 
         // Initialize the player view.
         mPlayerView = (SimpleExoPlayerView) rootView.findViewById(R.id.playerView);
 
         // Initialize the player.
-        String videoUrl = step.getVideoURL();
+        String videoUrl = steps.get(listItemIndex).getVideoURL();
         /* In the online JSON data, step 5 of Nutella Pie has its video URL misplaced
         in the thumbnail URL instead. Use this thumbnail URL if it's available and
         the video URL is not available.
          */
-        String thumbnailURL = step.getThumbnailURL();
+        String thumbnailURL = steps.get(listItemIndex).getThumbnailURL();
         Log.d(TAG, "video url is: " + videoUrl);
         if (videoUrl.isEmpty() && thumbnailURL.isEmpty()) {
             Log.d(TAG, "empty url");
@@ -112,8 +125,12 @@ public class RecipeStepDetailsFragment extends Fragment {
         return rootView;
     }
 
-    public void setStep(Step step) {
-        this.step = step;
+    public void setSteps(List<Step> steps) {
+        this.steps = steps;
+    }
+
+    public void setListItemIndex(int listItemIndex) {
+        this.listItemIndex = listItemIndex;
     }
 
     /**
@@ -160,7 +177,8 @@ public class RecipeStepDetailsFragment extends Fragment {
     /* Before API 24 you need to release ExoPlayer and other resources in onPause because there is
      no guarantee that onStop is called at all.
      After API 24 you want to release the player in onStop, because onPause may be called when your
-     app is still visible in split screen.
+     app is still visible in split screen. onPause and onStop are guaranteed to be called.
+
      onDestroy may not be called at all and should not be used for releasing resources.
      */
     @Override

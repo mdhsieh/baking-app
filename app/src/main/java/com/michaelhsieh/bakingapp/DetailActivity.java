@@ -12,6 +12,8 @@ import android.util.Log;
 import com.michaelhsieh.bakingapp.model.Recipe;
 import com.michaelhsieh.bakingapp.model.Step;
 
+import java.util.ArrayList;
+
 /** This Activity uses a master/detail flow to change its display depending on device screen size.
  *
  * On smaller devices, this will display the recipe steps list only.
@@ -25,8 +27,17 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
     // Recipe key when retrieving Intent
     private static final String EXTRA_RECIPE = "Recipe";
 
-    // Step key when sending Intent
-    private static final String EXTRA_STEP = "Step";
+    // List of Steps key when sending Intent
+    private static final String EXTRA_STEPS = "Steps";
+    // index key when sending Intent
+    private static final String EXTRA_LIST_ITEM_INDEX = "list_item_index";
+
+    // the Recipe that was selected from MainActivity
+    Recipe recipe;
+
+    // list index of the selected recipe step
+    // default value is 0
+    private int stepIndex;
 
     // Track whether to display a two-pane or single-pane UI
     // A single-pane display refers to phone screens, and two-pane to larger tablet screens
@@ -39,7 +50,7 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
 
         // get the Recipe from the Intent that started this Activity
         Intent intent = getIntent();
-        Recipe recipe = intent.getParcelableExtra(EXTRA_RECIPE);
+        recipe = intent.getParcelableExtra(EXTRA_RECIPE);
 
         // create the recipe steps list
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -54,12 +65,15 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
             isTwoPane = true;
 
             if (recipe != null) {
-                // start with the first step
-                Step step = recipe.getSteps().get(0);
+                // start with the first step at position 0
+                //Step step = recipe.getSteps().get(0);
+                // create a new ArrayList using the List of Steps
+                ArrayList<Step> steps = new ArrayList<Step>(recipe.getSteps());
 
                 // In two-pane mode, add initial RecipeStepDetailsFragment to the screen
                 fragmentTransaction = fragmentManager.beginTransaction();
-                Fragment recipeStepDetailsFragment = RecipeStepDetailsFragment.newInstance(step);
+                // use newInstance method instead of constructor, passing in the list of steps and selected step index
+                Fragment recipeStepDetailsFragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex);
                 fragmentTransaction.replace(R.id.recipe_step_details_container, recipeStepDetailsFragment);
                 fragmentTransaction.commit();
             }
@@ -72,14 +86,18 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
 
     // Define the behavior for onRecipeStepSelected
     @Override
-    public void onRecipeStepSelected(Step step) {
+    public void onRecipeStepSelected(int position) {
+        // create a new ArrayList using the List of Steps
+        ArrayList<Step> steps = new ArrayList<Step>(recipe.getSteps());
+        stepIndex = position;
 
         // Handle the two-pane case and replace existing fragment right when a new step is selected from the master list
         if (isTwoPane) {
             // Create two-pane interaction
             FragmentManager fragmentManager = getSupportFragmentManager();
-            RecipeStepDetailsFragment recipeStepDetailsFragment = new RecipeStepDetailsFragment();
-            recipeStepDetailsFragment.setStep(step);
+            //RecipeStepDetailsFragment recipeStepDetailsFragment = new RecipeStepDetailsFragment();
+            RecipeStepDetailsFragment recipeStepDetailsFragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex);
+            //recipeStepDetailsFragment.setSteps(steps);
 
             // Replace the old recipe step details fragment with a new one
             fragmentManager.beginTransaction()
@@ -87,12 +105,14 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
                     .commit();
 
         } else {
-            // Handle the single-pane phone case by passing the selected Step in an Extra attached to an Intent
+            // Handle the single-pane phone case by passing the list of Steps and
+            // index in Extras attached to an Intent
 
-            // display selected step details in new Activity only if single-pane
             // launch the recipe step details screen
             Intent launchStepDetailsActivity = new Intent(this, RecipeStepDetailsActivity.class);
-            launchStepDetailsActivity.putExtra(EXTRA_STEP, step);
+            launchStepDetailsActivity.putExtra(EXTRA_STEPS, steps);
+            launchStepDetailsActivity.putExtra(EXTRA_LIST_ITEM_INDEX, stepIndex);
+            // display selected step details in new Activity only if single-pane
             startActivity(launchStepDetailsActivity);
         }
     }

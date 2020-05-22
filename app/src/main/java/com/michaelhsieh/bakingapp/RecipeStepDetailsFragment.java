@@ -112,6 +112,10 @@ public class RecipeStepDetailsFragment extends Fragment {
         return rootView;
     }
 
+    public void setStep(Step step) {
+        this.step = step;
+    }
+
     /**
      * Initialize ExoPlayer.
      * @param mediaUri The URI of the sample to play.

@@ -18,12 +18,15 @@ import com.michaelhsieh.bakingapp.model.Step;
  * On larger devices like tablets, this will display a two-pane layout. That is,
  * The recipe steps list will be displayed together with the selected step details.
  */
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements RecipeStepsListFragment.OnRecipeStepClickListener {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
 
     // Recipe key when retrieving Intent
     private static final String EXTRA_RECIPE = "Recipe";
+
+    // Step key when sending Intent
+    private static final String EXTRA_STEP = "Step";
 
     // Track whether to display a two-pane or single-pane UI
     // A single-pane display refers to phone screens, and two-pane to larger tablet screens
@@ -65,5 +68,32 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    // Define the behavior for onRecipeStepSelected
+    @Override
+    public void onRecipeStepSelected(Step step) {
+
+        // Handle the two-pane case and replace existing fragment right when a new step is selected from the master list
+        if (isTwoPane) {
+            // Create two-pane interaction
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            RecipeStepDetailsFragment recipeStepDetailsFragment = new RecipeStepDetailsFragment();
+            recipeStepDetailsFragment.setStep(step);
+
+            // Replace the old recipe step details fragment with a new one
+            fragmentManager.beginTransaction()
+                    .replace(R.id.recipe_step_details_container, recipeStepDetailsFragment)
+                    .commit();
+
+        } else {
+            // Handle the single-pane phone case by passing the selected Step in an Extra attached to an Intent
+
+            // display selected step details in new Activity only if single-pane
+            // launch the recipe step details screen
+            Intent launchStepDetailsActivity = new Intent(this, RecipeStepDetailsActivity.class);
+            launchStepDetailsActivity.putExtra(EXTRA_STEP, step);
+            startActivity(launchStepDetailsActivity);
+        }
     }
 }

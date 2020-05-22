@@ -1,8 +1,10 @@
 package com.michaelhsieh.bakingapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,8 +35,8 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
 
     private static final String TAG = RecipeStepsListFragment.class.getSimpleName();
 
-    // Step key when sending Intent
-    private static final String EXTRA_STEP = "Step";
+    /*// Step key when sending Intent
+    private static final String EXTRA_STEP = "Step";*/
 
     // parameter argument with name that matches
     // the fragment initialization parameters
@@ -46,6 +48,18 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
     private RecyclerView recyclerView;
     private RecipeStepsListAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+
+    // Define a new interface OnRecipeStepClickListener that triggers a callback in the host activity
+    private OnRecipeStepClickListener callback;
+
+    // OnRecipeStepClickListener interface, calls a method in the host activity named onRecipeStepSelected
+    /* OnRecipeStepSelected will change the step in the host activity and change
+    the step details fragment to match the selected step
+    */
+    public interface OnRecipeStepClickListener
+    {
+        void onRecipeStepSelected(Step step);
+    }
 
     public RecipeStepsListFragment() {
         // Required empty public constructor
@@ -64,6 +78,19 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
         args.putParcelable(ARG_RECIPE, param1);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the host activity has implemented the callback interface
+        // If not, it throws an exception
+        try {
+            callback = (OnRecipeStepClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnRecipeStepClickListener");
+        }
     }
 
     @Override
@@ -110,16 +137,11 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
             detached from the activity. isAdded gives the same result as getActivity() == null.
 
             For example:
-            When pressing the back button, the fragment is no longer attached to the activity,
-            so getContext() returns null.
+            When pressing the back button to return to a previous activity, the fragment is
+            no longer attached to the activity, so getActivity() returns null.
+            If the check isn't there the app will crash.
              */
 
-            /* For example:
-            If we open the fragment, push a task, and then quickly press back to return to
-            a previous activity, when the task is finished, it will try to access the
-            activity in onPostExecute() by calling the getActivity() method. If the check isn't
-            there the app will crash.
-             */
             if (isAdded()) {
                 // specify the adapter
                 adapter = new RecipeStepsListAdapter(getContext(), steps);
@@ -134,16 +156,19 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
         return rootView;
     }
 
+    // called when a step in the RecipeStepsListAdapter is clicked
     @Override
     public void onRecipeStepItemClick(View view, int position) {
+        Step step = adapter.getItem(position);
+        // trigger the callback onRecipeStepSelected when an item is clicked
+        callback.onRecipeStepSelected(step);
 
-        // get the recipe step that was clicked
+        /*// get the recipe step that was clicked
         Step step = adapter.getItem(position);
         //Toast.makeText(getContext(), "You clicked " + step.getShortDescription() + " on row number " + position, Toast.LENGTH_SHORT).show();
         // launch the recipe step details screen
         Intent launchStepDetailsActivity = new Intent(getActivity(), RecipeStepDetailsActivity.class);
         launchStepDetailsActivity.putExtra(EXTRA_STEP, step);
-        startActivity(launchStepDetailsActivity);
-
+        startActivity(launchStepDetailsActivity);*/
     }
 }

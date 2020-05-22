@@ -33,12 +33,12 @@ public class RecipeStepDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_step_details);
 
-        // get the Recipe from the Intent that started this Activity
+        // get the ArrayList of Steps from the Intent that started this Activity
         Intent intent = getIntent();
-        List<Step> stepsList = intent.getParcelableExtra(EXTRA_STEPS);
-        if (stepsList != null) {
+        ArrayList<Step> steps = intent.getParcelableArrayListExtra(EXTRA_STEPS);
+        if (steps != null) {
             // create a new ArrayList using the List of Steps
-            ArrayList<Step> steps = new ArrayList<Step>(stepsList);
+            //ArrayList<Step> steps = new ArrayList<Step>(stepsList);
             int stepIndex = intent.getIntExtra(EXTRA_LIST_ITEM_INDEX, 0);
 
             FragmentManager fragmentManager = getSupportFragmentManager();

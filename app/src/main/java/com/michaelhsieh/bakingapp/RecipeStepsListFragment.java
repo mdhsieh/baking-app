@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -163,5 +164,15 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
         //Step step = adapter.getItem(position);
         // trigger the callback onRecipeStepSelected when an item is clicked
         callback.onRecipeStepSelected(position);
+
+        /*if (getContext() == null) {
+            Log.e(TAG, "null returned from getContext()");
+            throw new RuntimeException("null returned from getContext()");
+        }
+        view.findViewById(R.id.card_view_recipe_step).setBackgroundColor(
+                ContextCompat.getColor(getContext(), R.color.colorAccent));*/
+
+        adapter.setItemSelectedPosition(position);
+        adapter.notifyDataSetChanged();
     }
 }

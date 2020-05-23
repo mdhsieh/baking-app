@@ -7,9 +7,10 @@
     android:layout_height="100dp"
     card_view:cardCornerRadius="4dp"
     card_view:cardElevation="4dp"
-    android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
     android:focusable="true">
+    <!--android:background="@drawable/list_item_selector"-->
 
     <TextView
         android:id="@+id/tv_step_short_desc"

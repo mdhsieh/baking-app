@@ -1,6 +1,7 @@
 package com.michaelhsieh.bakingapp;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class RecipeStepsListAdapter extends RecyclerView.Adapter<RecipeStepsListAdapter.ViewHolder> {
 
+    private static final String TAG = RecipeStepsListAdapter.class.getSimpleName();
+
     private List<Step> steps;
     private LayoutInflater inflater;
     private ItemClickListener clickListener;
@@ -23,8 +26,15 @@ public class RecipeStepsListAdapter extends RecyclerView.Adapter<RecipeStepsList
     // context to get colors from
     private final Context context;
 
-    // position of the currently selected item, default one-pane layout so no items are selected
-    /* This will be used to highlight the selected item with a certain color in two-pane layout.
+    /* Boolean to track whether to highlight recipe selected step or not.
+    Default to false since one-pane layout doesn't need items to be highlighted.
+    Will be set to true in two-pane case.
+     */
+    private boolean itemHighlightingActivated = false;
+
+    /* Position of the currently selected item.
+    Default one-pane layout so no items are selected.
+    This will be used to highlight the selected item with a certain color in two-pane layout.
     This way the user knows which recipe step he or she has selected.
      */
     private int selectedPos = -1;
@@ -49,13 +59,17 @@ public class RecipeStepsListAdapter extends RecyclerView.Adapter<RecipeStepsList
         Step step = steps.get(position);
         holder.stepDisplay.setText(step.getShortDescription());
 
+        Log.d(TAG, "itemHighlightingActivated is: " + itemHighlightingActivated);
+
         // change the color of the CardView depending on if it's being selected by user or not
         // if selected, highlight with different color
-        if (selectedPos == position) {
-            holder.stepCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
-        }
-        else {
-            holder.stepCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.cardview_light_background));
+        if (itemHighlightingActivated) {
+            Log.d(TAG, "changing colors");
+            if (selectedPos == position) {
+                holder.stepCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+            } else {
+                holder.stepCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.cardview_light_background));
+            }
         }
     }
 
@@ -103,6 +117,11 @@ public class RecipeStepsListAdapter extends RecyclerView.Adapter<RecipeStepsList
     /* set which item is currently being selected by the user to update the item's color */
     void setItemHighlightedPosition(int position) {
         selectedPos = position;
+    }
+
+    // change whether the list allows selected recipe step to be highlighted
+    void setItemHighlightingActivated (boolean itemHighlightingActivated) {
+        this.itemHighlightingActivated = itemHighlightingActivated;
     }
 }
 

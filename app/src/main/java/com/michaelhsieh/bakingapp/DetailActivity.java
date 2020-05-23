@@ -55,17 +55,9 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
         // create the recipe steps list
         /*FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        Fragment fragment = RecipeStepsListFragment.newInstance(recipe);
-        fragmentTransaction.replace(R.id.recipe_steps_list_container, fragment);
-        fragmentTransaction.commit();*/
-
-        // create the recipe steps list
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         RecipeStepsListFragment recipeStepsListFragment = RecipeStepsListFragment.newInstance(recipe);
-        recipeStepsListFragment.activateItemHighlighting();
         fragmentTransaction.replace(R.id.recipe_steps_list_container, recipeStepsListFragment);
-        fragmentTransaction.commit();
+        fragmentTransaction.commit();*/
 
 
         // determine if you're creating a two-pane or single-pane display
@@ -75,21 +67,18 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
 
             if (recipe != null) {
 
-                // create the recipe steps list
-
                 /* Automatically highlight the first item in two-pane layout,
                 since that item is pre-selected by default.
                 When the user selects a different recipe step in the list, that step will
                 be highlighted instead.
                 */
-                /*FragmentManager fragmentManager = getSupportFragmentManager();
+                /*recipeStepsListFragment.activateItemHighlighting();*/
+                // create the recipe steps list
+                FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                RecipeStepsListFragment recipeStepsListFragment = RecipeStepsListFragment.newInstance(recipe);
-                recipeStepsListFragment.activateItemHighlighting();
+                RecipeStepsListFragment recipeStepsListFragment = RecipeStepsListFragment.newInstance(recipe, isTwoPane);
                 fragmentTransaction.replace(R.id.recipe_steps_list_container, recipeStepsListFragment);
-                fragmentTransaction.commit();*/
-                recipeStepsListFragment.activateItemHighlighting();
-
+                fragmentTransaction.commit();
 
                 // start with the first step at position 0
                 //Step step = recipe.getSteps().get(0);
@@ -103,22 +92,19 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
                 fragmentTransaction.replace(R.id.recipe_step_details_container, recipeStepDetailsFragment);
                 fragmentTransaction.commit();
 
-                /*RecipeStepsListFragment newFragment = RecipeStepsListFragment.newInstance(recipe);
-                newFragment.activateItemHighlighting();*/
-
             }
             else {
                 Log.e(TAG, "recipe retrieved from intent was null");
             }
         }
-        /*else {
+        else {
             // create the recipe steps list in single-pane layout
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            Fragment fragment = RecipeStepsListFragment.newInstance(recipe);
+            Fragment fragment = RecipeStepsListFragment.newInstance(recipe, isTwoPane);
             fragmentTransaction.replace(R.id.recipe_steps_list_container, fragment);
             fragmentTransaction.commit();
-        }*/
+        }
 
     }
 
@@ -133,9 +119,7 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
         if (isTwoPane) {
             // Create two-pane interaction
             FragmentManager fragmentManager = getSupportFragmentManager();
-            //RecipeStepDetailsFragment recipeStepDetailsFragment = new RecipeStepDetailsFragment();
             RecipeStepDetailsFragment recipeStepDetailsFragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex);
-            //recipeStepDetailsFragment.setSteps(steps);
 
             // Replace the old recipe step details fragment with a new one
             fragmentManager.beginTransaction()

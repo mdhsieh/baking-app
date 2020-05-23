@@ -1,11 +1,9 @@
 package com.michaelhsieh.bakingapp;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.michaelhsieh.bakingapp.model.Ingredient;
 import com.michaelhsieh.bakingapp.model.Recipe;
@@ -36,15 +33,15 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
 
     private static final String TAG = RecipeStepsListFragment.class.getSimpleName();
 
-    /*// Step key when sending Intent
-    private static final String EXTRA_STEP = "Step";*/
-
     // parameter argument with name that matches
     // the fragment initialization parameters
     private static final String ARG_RECIPE = "Recipe";
+    private static final String ARG_ALLOW_HIGHLIGHTING = "allow_highlighting";
 
     // parameter of type Recipe
     private Recipe recipe;
+    // parameter of type boolean to highlight selected step in two-pane case
+    private boolean allowHighlighting;
 
     private RecyclerView recyclerView;
     private RecipeStepsListAdapter adapter;
@@ -54,8 +51,7 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
     private OnRecipeStepClickListener callback;
 
     // OnRecipeStepClickListener interface, calls a method in the host activity named onRecipeStepSelected
-    /* OnRecipeStepSelected will change the step in the host activity and change
-    the step details fragment to match the selected step
+    /* OnRecipeStepSelected will change the step details fragment to match the selected step.
     */
     public interface OnRecipeStepClickListener
     {
@@ -70,13 +66,15 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 The Recipe to get ingredients and steps from.
+     * @param recipe The Recipe to get ingredients and steps from.
+     * @param allowHighlighting Whether a step should be highlighted when the user selects it.
      * @return A new instance of fragment RecipeDetailFragment.
      */
-    public static RecipeStepsListFragment newInstance(Recipe param1) {
+    public static RecipeStepsListFragment newInstance(Recipe recipe, boolean allowHighlighting) {
         RecipeStepsListFragment fragment = new RecipeStepsListFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_RECIPE, param1);
+        args.putParcelable(ARG_RECIPE, recipe);
+        args.putBoolean(ARG_ALLOW_HIGHLIGHTING, allowHighlighting);
         fragment.setArguments(args);
         return fragment;
     }
@@ -99,6 +97,7 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             recipe = getArguments().getParcelable(ARG_RECIPE);
+            allowHighlighting = getArguments().getBoolean(ARG_ALLOW_HIGHLIGHTING);
         }
     }
 
@@ -148,6 +147,11 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
                 adapter = new RecipeStepsListAdapter(getContext(), steps);
                 adapter.setClickListener(this);
                 recyclerView.setAdapter(adapter);
+
+                if (allowHighlighting) {
+                    activateItemHighlighting();
+                    Log.d(TAG, "allow highlighting, fragment was made for two-pane layout");
+                }
             }
             else {
                 Log.e(TAG, "the fragment is not currently added to its activity");
@@ -159,11 +163,16 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
 
     // in two-pane layout, the first item should be highlighted automatically when
     // recipe steps list is initialized
-    public void activateItemHighlighting() {
+    private void activateItemHighlighting() {
         if (adapter != null) {
+            // allow highlighting in two-pane layout
+            adapter.setItemHighlightingActivated(true);
+            // pre-selected first item so highlight automatically
             adapter.setItemHighlightedPosition(0);
             // force onBindViewHolder again to update new selected item color
             adapter.notifyDataSetChanged();
+        } else {
+            Log.e(TAG, "RecipeStepsListAdapter is null");
         }
     }
 
@@ -172,11 +181,12 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
     public void onRecipeStepItemClick(View view, int position) {
         // get the Step that was clicked
         //Step step = adapter.getItem(position);
+
         // trigger the callback onRecipeStepSelected when an item is clicked
         callback.onRecipeStepSelected(position);
 
-        // change the position of the selected item
-        /* This position is used to highlight the selected item, indicating to the user
+        /* Change the position of the selected item.
+        This position is used to highlight the selected item, indicating to the user
         which recipe step they are on in a two-pane layout. */
         adapter.setItemHighlightedPosition(position);
         // force onBindViewHolder again to update new selected item color

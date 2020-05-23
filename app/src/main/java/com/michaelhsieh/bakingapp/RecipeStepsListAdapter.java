@@ -1,7 +1,6 @@
 package com.michaelhsieh.bakingapp;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class RecipeStepsListAdapter extends RecyclerView.Adapter<RecipeStepsListAdapter.ViewHolder> {
-
-    private static final String TAG = RecipeStepsListAdapter.class.getSimpleName();
 
     private List<Step> steps;
     private LayoutInflater inflater;
@@ -59,12 +56,9 @@ public class RecipeStepsListAdapter extends RecyclerView.Adapter<RecipeStepsList
         Step step = steps.get(position);
         holder.stepDisplay.setText(step.getShortDescription());
 
-        Log.d(TAG, "itemHighlightingActivated is: " + itemHighlightingActivated);
-
         // change the color of the CardView depending on if it's being selected by user or not
         // if selected, highlight with different color
         if (itemHighlightingActivated) {
-            Log.d(TAG, "changing colors");
             if (selectedPos == position) {
                 holder.stepCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
             } else {

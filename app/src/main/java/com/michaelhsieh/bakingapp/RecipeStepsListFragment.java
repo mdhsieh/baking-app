@@ -51,8 +51,7 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
     private OnRecipeStepClickListener callback;
 
     // OnRecipeStepClickListener interface, calls a method in the host activity named onRecipeStepSelected
-    /* OnRecipeStepSelected will change the step details fragment to match the selected step.
-    */
+    /* OnRecipeStepSelected will change the step details fragment to match the selected step. */
     public interface OnRecipeStepClickListener
     {
         void onRecipeStepSelected(int position);
@@ -148,9 +147,11 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
                 adapter.setClickListener(this);
                 recyclerView.setAdapter(adapter);
 
+                /* If fragment was constructed for two-pane layout, allow
+                the step the user selects to be highlighted.
+                 */
                 if (allowHighlighting) {
                     activateItemHighlighting();
-                    Log.d(TAG, "allow highlighting, fragment was made for two-pane layout");
                 }
             }
             else {
@@ -179,9 +180,6 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
     // called when a step in the RecipeStepsListAdapter is clicked
     @Override
     public void onRecipeStepItemClick(View view, int position) {
-        // get the Step that was clicked
-        //Step step = adapter.getItem(position);
-
         // trigger the callback onRecipeStepSelected when an item is clicked
         callback.onRecipeStepSelected(position);
 

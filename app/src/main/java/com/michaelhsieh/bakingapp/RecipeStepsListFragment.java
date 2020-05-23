@@ -157,6 +157,16 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
         return rootView;
     }
 
+    // in two-pane layout, the first item should be highlighted automatically when
+    // recipe steps list is initialized
+    public void activateItemHighlighting() {
+        if (adapter != null) {
+            adapter.setItemHighlightedPosition(0);
+            // force onBindViewHolder again to update new selected item color
+            adapter.notifyDataSetChanged();
+        }
+    }
+
     // called when a step in the RecipeStepsListAdapter is clicked
     @Override
     public void onRecipeStepItemClick(View view, int position) {
@@ -165,14 +175,11 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
         // trigger the callback onRecipeStepSelected when an item is clicked
         callback.onRecipeStepSelected(position);
 
-        /*if (getContext() == null) {
-            Log.e(TAG, "null returned from getContext()");
-            throw new RuntimeException("null returned from getContext()");
-        }
-        view.findViewById(R.id.card_view_recipe_step).setBackgroundColor(
-                ContextCompat.getColor(getContext(), R.color.colorAccent));*/
-
-        adapter.setItemSelectedPosition(position);
+        // change the position of the selected item
+        /* This position is used to highlight the selected item, indicating to the user
+        which recipe step they are on in a two-pane layout. */
+        adapter.setItemHighlightedPosition(position);
+        // force onBindViewHolder again to update new selected item color
         adapter.notifyDataSetChanged();
     }
 }

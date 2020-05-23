@@ -23,11 +23,11 @@ public class RecipeStepsListAdapter extends RecyclerView.Adapter<RecipeStepsList
     // context to get colors from
     private final Context context;
 
-    // position of the currently selected item
-    /* This will be used to highlight the selected item with a certain color.
+    // position of the currently selected item, default one-pane layout so no items are selected
+    /* This will be used to highlight the selected item with a certain color in two-pane layout.
     This way the user knows which recipe step he or she has selected.
      */
-    private int selectedPos = 0;
+    private int selectedPos = -1;
 
     // data is passed into the constructor
     RecipeStepsListAdapter(Context context, List<Step> steps) {
@@ -101,7 +101,7 @@ public class RecipeStepsListAdapter extends RecyclerView.Adapter<RecipeStepsList
     }
 
     /* set which item is currently being selected by the user to update the item's color */
-    void setItemSelectedPosition(int position) {
+    void setItemHighlightedPosition(int position) {
         selectedPos = position;
     }
 }

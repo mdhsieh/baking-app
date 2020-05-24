@@ -47,11 +47,14 @@ public class RecipeStepDetailsFragment extends Fragment {
     // the fragment initialization parameters
     private static final String ARG_STEPS = "Steps";
     private static final String ARG_LIST_ITEM_INDEX = "list_item_index";
+    private static final String ARG_HIDE_BUTTONS = "hide_buttons";
 
     // parameter of type List of Steps
     private List<Step> steps = new ArrayList<>();
     // parameter of type int
     private int listItemIndex;
+    // parameter of type boolean to hide buttons in single-pane and show buttons in two-pane case
+    private boolean hideButtons;
 
     private SimpleExoPlayerView mPlayerView;
     private SimpleExoPlayer mExoplayer;
@@ -98,13 +101,16 @@ public class RecipeStepDetailsFragment extends Fragment {
      *
      * @param steps The list of steps to get video and description from.
      * @param listItemIndex The index of the selected step.
+     * @param hideButtons Whether or not to display next and previous buttons.
+     *                    Single-pane shows buttons, two-pane does not.
      * @return A new instance of fragment RecipeStepDetailsFragment.
      */
-    public static RecipeStepDetailsFragment newInstance(ArrayList<Step> steps, int listItemIndex) {
+    public static RecipeStepDetailsFragment newInstance(ArrayList<Step> steps, int listItemIndex, boolean hideButtons) {
         RecipeStepDetailsFragment fragment = new RecipeStepDetailsFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(ARG_STEPS, steps);
         args.putInt(ARG_LIST_ITEM_INDEX, listItemIndex);
+        args.putBoolean(ARG_HIDE_BUTTONS, hideButtons);
         fragment.setArguments(args);
         return fragment;
     }
@@ -113,18 +119,15 @@ public class RecipeStepDetailsFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
-        // This makes sure that the host activity has implemented the two callback interfaces
+        // This makes sure that the host activity has implemented the callback interface
         // If not, it throws an exception
         try {
             prevCallback = (OnPrevButtonClickListener) context;
 
         } catch (ClassCastException e) {
-            //Log.e(TAG, context.toString() + " must implement OnPrevButtonClickListener", e);
             throw new ClassCastException(context.toString() + " must implement OnPrevButtonClickListener");
         }
 
-        // This makes sure that the host activity has implemented the two callback interfaces
-        // If not, it throws an exception
         try {
             nextCallback = (OnNextButtonClickListener) context;
         } catch (ClassCastException e) {
@@ -138,6 +141,7 @@ public class RecipeStepDetailsFragment extends Fragment {
         if (getArguments() != null) {
             steps = getArguments().getParcelableArrayList(ARG_STEPS);
             listItemIndex = getArguments().getInt(ARG_LIST_ITEM_INDEX);
+            hideButtons = getArguments().getBoolean(ARG_HIDE_BUTTONS);
         }
     }
 
@@ -180,6 +184,17 @@ public class RecipeStepDetailsFragment extends Fragment {
         // get the previous and next buttons
         prevButton = rootView.findViewById(R.id.btn_prev);
         nextButton = rootView.findViewById(R.id.btn_next);
+
+        // show buttons in single-pane layout, but not two-pane layout
+        // since tablet can just navigate to another step's detail on same screen
+        if (!hideButtons) {
+            prevButton.setVisibility(View.VISIBLE);
+            nextButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            prevButton.setVisibility(View.GONE);
+            nextButton.setVisibility(View.GONE);
+        }
 
         // the next and previous buttons trigger callbacks to host activity
         prevButton.setOnClickListener(new Button.OnClickListener() {

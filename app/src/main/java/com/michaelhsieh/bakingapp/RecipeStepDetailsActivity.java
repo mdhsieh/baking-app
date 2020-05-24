@@ -42,9 +42,10 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements
             //ArrayList<Step> steps = new ArrayList<Step>(stepsList);
             int stepIndex = intent.getIntExtra(EXTRA_LIST_ITEM_INDEX, 0);
 
+            // this Activity will only be created in the single-pane layout, so show buttons
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            Fragment fragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex);
+            Fragment fragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex, false);
             fragmentTransaction.replace(R.id.recipe_step_details_container, fragment);
             fragmentTransaction.commit();
         }

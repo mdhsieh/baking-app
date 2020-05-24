@@ -20,7 +20,8 @@ import java.util.ArrayList;
  * On larger devices like tablets, this will display a two-pane layout. That is,
  * The recipe steps list will be displayed together with the selected step details.
  */
-public class DetailActivity extends AppCompatActivity implements RecipeStepsListFragment.OnRecipeStepClickListener {
+public class DetailActivity extends AppCompatActivity implements RecipeStepsListFragment.OnRecipeStepClickListener,
+        RecipeStepDetailsFragment.OnPrevButtonClickListener, RecipeStepDetailsFragment.OnNextButtonClickListener {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
 
@@ -80,7 +81,7 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
                 // In two-pane mode, add initial RecipeStepDetailsFragment to the screen
                 fragmentTransaction = fragmentManager.beginTransaction();
                 // use newInstance method instead of constructor, passing in the list of steps and selected step index
-                Fragment recipeStepDetailsFragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex);
+                Fragment recipeStepDetailsFragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex, isTwoPane);
                 fragmentTransaction.replace(R.id.recipe_step_details_container, recipeStepDetailsFragment);
                 fragmentTransaction.commit();
 
@@ -111,7 +112,7 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
         if (isTwoPane) {
             // Create two-pane interaction
             FragmentManager fragmentManager = getSupportFragmentManager();
-            RecipeStepDetailsFragment recipeStepDetailsFragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex);
+            RecipeStepDetailsFragment recipeStepDetailsFragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex, isTwoPane);
 
             // Replace the old recipe step details fragment with a new one
             fragmentManager.beginTransaction()
@@ -129,5 +130,17 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
             // display selected step details in new Activity only if single-pane
             startActivity(launchStepDetailsActivity);
         }
+    }
+
+    /* prev button should not appear in two-pane layout, do nothing */
+    @Override
+    public void onPrevButtonClicked(int position) {
+
+    }
+
+    /* next button should not appear in two-pane layout, do nothing */
+    @Override
+    public void onNextButtonClicked(int position) {
+
     }
 }

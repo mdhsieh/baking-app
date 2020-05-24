@@ -29,6 +29,11 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements
     // index key when retrieving Intent
     private static final String EXTRA_LIST_ITEM_INDEX = "list_item_index";
 
+    // list of steps to create step details from
+    private ArrayList<Step> steps;
+    // list index of selected step
+    private int stepIndex;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,11 +41,11 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements
 
         // get the ArrayList of Steps from the Intent that started this Activity
         Intent intent = getIntent();
-        ArrayList<Step> steps = intent.getParcelableArrayListExtra(EXTRA_STEPS);
+        steps = intent.getParcelableArrayListExtra(EXTRA_STEPS);
         if (steps != null) {
             // create a new ArrayList using the List of Steps
             //ArrayList<Step> steps = new ArrayList<Step>(stepsList);
-            int stepIndex = intent.getIntExtra(EXTRA_LIST_ITEM_INDEX, 0);
+            stepIndex = intent.getIntExtra(EXTRA_LIST_ITEM_INDEX, 0);
 
             // this Activity will only be created in the single-pane layout, so show buttons
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -56,11 +61,35 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements
 
     @Override
     public void onPrevButtonClicked(int position) {
-        Log.d(TAG, "prev button clicked");
+        // get the prev step's position
+        stepIndex = position - 1;
+        // create new details fragment if not already at the first step
+        if (steps != null && position > 0) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            RecipeStepDetailsFragment prevRecipeStepDetailsFragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex, false);
+            // Replace the old recipe step details fragment with a new one
+            fragmentManager.beginTransaction()
+                    .replace(R.id.recipe_step_details_container, prevRecipeStepDetailsFragment)
+                    .commit();
+        } else {
+            Log.d(TAG, "no prev step");
+        }
     }
 
     @Override
     public void onNextButtonClicked(int position) {
-        Log.d(TAG, "next button clicked");
+        // get the next step's position
+        stepIndex = position + 1;
+        // create new details fragment if not already at the last step
+        if (steps != null && position < steps.size() - 1) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            RecipeStepDetailsFragment nextRecipeStepDetailsFragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex, false);
+            // Replace the old recipe step details fragment with a new one
+            fragmentManager.beginTransaction()
+                    .replace(R.id.recipe_step_details_container, nextRecipeStepDetailsFragment)
+                    .commit();
+        } else {
+            Log.d(TAG, "no next step");
+        }
     }
 }

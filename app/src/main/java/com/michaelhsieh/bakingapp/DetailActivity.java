@@ -132,13 +132,13 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
         }
     }
 
-    /* prev button should not appear in two-pane layout, do nothing */
+    /* prev button should not appear in two-pane layout, so do nothing */
     @Override
     public void onPrevButtonClicked(int position) {
 
     }
 
-    /* next button should not appear in two-pane layout, do nothing */
+    /* next button should not appear in two-pane layout, so do nothing */
     @Override
     public void onNextButtonClicked(int position) {
 

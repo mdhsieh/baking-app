@@ -72,9 +72,6 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements
                     .replace(R.id.recipe_step_details_container, prevRecipeStepDetailsFragment)
                     .commit();
         }
-        /*else {
-            Log.d(TAG, "no prev step");
-        }*/
     }
 
     @Override
@@ -90,8 +87,5 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements
                     .replace(R.id.recipe_step_details_container, nextRecipeStepDetailsFragment)
                     .commit();
         }
-        /*else {
-            Log.d(TAG, "no next step");
-        }*/
     }
 }

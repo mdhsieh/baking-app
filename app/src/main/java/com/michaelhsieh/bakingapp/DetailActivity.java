@@ -123,11 +123,10 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
             // Handle the single-pane phone case by passing the list of Steps and
             // index in Extras attached to an Intent
 
-            // launch the recipe step details screen
+            // launch the recipe step details screen only if single-pane
             Intent launchStepDetailsActivity = new Intent(this, RecipeStepDetailsActivity.class);
             launchStepDetailsActivity.putExtra(EXTRA_STEPS, steps);
             launchStepDetailsActivity.putExtra(EXTRA_LIST_ITEM_INDEX, stepIndex);
-            // display selected step details in new Activity only if single-pane
             startActivity(launchStepDetailsActivity);
         }
     }

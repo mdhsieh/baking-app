@@ -151,6 +151,7 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
                 the step the user selects to be highlighted.
                  */
                 if (allowHighlighting) {
+                    Log.d(TAG, "highlighting is allowed");
                     activateItemHighlighting();
                 }
             }
@@ -172,6 +173,7 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
             adapter.setItemHighlightedPosition(0);
             // force onBindViewHolder again to update new selected item color
             adapter.notifyDataSetChanged();
+            Log.d(TAG, "highlighted first step by default");
         } else {
             Log.e(TAG, "RecipeStepsListAdapter is null");
         }

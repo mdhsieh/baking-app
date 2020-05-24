@@ -43,7 +43,7 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements
         Intent intent = getIntent();
         steps = intent.getParcelableArrayListExtra(EXTRA_STEPS);
         if (steps != null) {
-            // create a new ArrayList using the List of Steps
+            //create a new ArrayList using the List of Steps
             //ArrayList<Step> steps = new ArrayList<Step>(stepsList);
             stepIndex = intent.getIntExtra(EXTRA_LIST_ITEM_INDEX, 0);
 
@@ -71,9 +71,10 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements
             fragmentManager.beginTransaction()
                     .replace(R.id.recipe_step_details_container, prevRecipeStepDetailsFragment)
                     .commit();
-        } else {
-            Log.d(TAG, "no prev step");
         }
+        /*else {
+            Log.d(TAG, "no prev step");
+        }*/
     }
 
     @Override
@@ -88,8 +89,9 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements
             fragmentManager.beginTransaction()
                     .replace(R.id.recipe_step_details_container, nextRecipeStepDetailsFragment)
                     .commit();
-        } else {
-            Log.d(TAG, "no next step");
         }
+        /*else {
+            Log.d(TAG, "no next step");
+        }*/
     }
 }

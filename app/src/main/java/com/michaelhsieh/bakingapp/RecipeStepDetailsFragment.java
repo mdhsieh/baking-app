@@ -159,6 +159,7 @@ public class RecipeStepDetailsFragment extends Fragment {
         mPlayerView = (SimpleExoPlayerView) rootView.findViewById(R.id.playerView);
 
         // Initialize the player.
+        // get selected step's video URL
         String videoUrl = steps.get(listItemIndex).getVideoURL();
         /* In the online JSON data, step 5 of Nutella Pie has its video URL misplaced
         in the thumbnail URL instead. Use this thumbnail URL if it's available and
@@ -196,6 +197,17 @@ public class RecipeStepDetailsFragment extends Fragment {
             nextButton.setVisibility(View.GONE);
         }
 
+        // if step is already the first step, don't show the prev button
+        if (listItemIndex == 0)
+        {
+            prevButton.setVisibility(View.GONE);
+        }
+        // if step is already the last step, don't show the next button
+        else if (steps!= null && listItemIndex == steps.size()-1)
+        {
+            nextButton.setVisibility(View.GONE);
+        }
+
         // the next and previous buttons trigger callbacks to host activity
         prevButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
@@ -215,13 +227,13 @@ public class RecipeStepDetailsFragment extends Fragment {
         return rootView;
     }
 
-    public void setSteps(List<Step> steps) {
+    /*public void setSteps(List<Step> steps) {
         this.steps = steps;
     }
 
     public void setListItemIndex(int listItemIndex) {
         this.listItemIndex = listItemIndex;
-    }
+    }*/
 
     /**
      * Initialize ExoPlayer.

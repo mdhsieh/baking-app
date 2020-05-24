@@ -183,11 +183,19 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
         // trigger the callback onRecipeStepSelected when an item is clicked
         callback.onRecipeStepSelected(position);
 
-        /* Change the position of the selected item.
-        This position is used to highlight the selected item, indicating to the user
-        which recipe step they are on in a two-pane layout. */
-        adapter.setItemHighlightedPosition(position);
-        // force onBindViewHolder again to update new selected item color
-        adapter.notifyDataSetChanged();
+        /* Change the position of the highlighted item to match the selected item.
+        This indicates to the user which recipe step they are on in
+        a two-pane layout. */
+        if (adapter != null && allowHighlighting) {
+            adapter.setItemHighlightedPosition(position);
+            // force onBindViewHolder again to update new selected item color
+            adapter.notifyDataSetChanged();
+        }
+        else if (adapter != null) {
+            // single-pane layout doesn't need highlighting
+            Log.d(TAG, "RecipeStepsListAdapter highlighting not allowed in single-pane layout");
+        } else {
+            Log.e(TAG, "RecipeStepsListAdapter is null");
+        }
     }
 }

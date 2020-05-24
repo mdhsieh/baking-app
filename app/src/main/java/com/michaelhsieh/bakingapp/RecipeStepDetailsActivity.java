@@ -19,7 +19,8 @@ import java.util.List;
  * It displays the selected recipe step details in a new screen.
  *
  */
-public class RecipeStepDetailsActivity extends AppCompatActivity {
+public class RecipeStepDetailsActivity extends AppCompatActivity implements
+        RecipeStepDetailsFragment.OnPrevButtonClickListener, RecipeStepDetailsFragment.OnNextButtonClickListener {
 
     private static final String TAG = RecipeStepDetailsActivity.class.getSimpleName();
 
@@ -50,5 +51,15 @@ public class RecipeStepDetailsActivity extends AppCompatActivity {
         else {
             Log.e(TAG, "steps retrieved from intent was null");
         }
+    }
+
+    @Override
+    public void onPrevButtonClicked(int position) {
+        Log.d(TAG, "prev button clicked");
+    }
+
+    @Override
+    public void onNextButtonClicked(int position) {
+        Log.d(TAG, "next button clicked");
     }
 }

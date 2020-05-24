@@ -1,14 +1,17 @@
 package com.michaelhsieh.bakingapp;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -53,6 +56,34 @@ public class RecipeStepDetailsFragment extends Fragment {
     private SimpleExoPlayerView mPlayerView;
     private SimpleExoPlayer mExoplayer;
 
+    private Button prevButton;
+    private Button nextButton;
+
+    // Define a new interface OnPrevButtonClickListener that triggers a callback in the host activity,
+    // which is DetailActivity
+    private OnPrevButtonClickListener prevCallback;
+
+    // OnPrevButtonClickListener interface, calls a method in the host activity named onPrevButtonClicked
+
+    /* onPrevButtonClicked will change the step details fragment to match the previous step,
+    or do nothing if already at the first step. */
+    public interface OnPrevButtonClickListener
+    {
+        void onPrevButtonClicked(int position);
+    }
+
+    // Define a new interface OnNextButtonClickListener that triggers a callback in the host activity
+    private OnNextButtonClickListener nextCallback;
+
+    // OnNextButtonClickListener interface, calls a method in the host activity named onNextButtonClicked
+
+    /* onNextButtonClicked will change the step details fragment to match the next step,
+    or do nothing if already at the last step. */
+    public interface OnNextButtonClickListener
+    {
+        void onNextButtonClicked(int position);
+    }
+
     public RecipeStepDetailsFragment() {
         // Required empty public constructor
     }
@@ -79,6 +110,29 @@ public class RecipeStepDetailsFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the host activity has implemented the two callback interfaces
+        // If not, it throws an exception
+        try {
+            prevCallback = (OnPrevButtonClickListener) context;
+
+        } catch (ClassCastException e) {
+            //Log.e(TAG, context.toString() + " must implement OnPrevButtonClickListener", e);
+            throw new ClassCastException(context.toString() + " must implement OnPrevButtonClickListener");
+        }
+
+        // This makes sure that the host activity has implemented the two callback interfaces
+        // If not, it throws an exception
+        try {
+            nextCallback = (OnNextButtonClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnNextButtonClickListener");
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
@@ -93,6 +147,7 @@ public class RecipeStepDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_recipe_step_details, container, false);
 
+        // set the description
         TextView descriptionDisplay = rootView.findViewById(R.id.tv_step_long_desc);
         descriptionDisplay.setText(steps.get(listItemIndex).getDescription());
 
@@ -121,6 +176,26 @@ public class RecipeStepDetailsFragment extends Fragment {
             initializePlayer(Uri.parse(videoUrl));
             Log.d(TAG, "initialized ExoPlayer");
         }
+
+        // get the previous and next buttons
+        prevButton = rootView.findViewById(R.id.btn_prev);
+        nextButton = rootView.findViewById(R.id.btn_next);
+
+        // the next and previous buttons trigger callbacks to host activity
+        prevButton.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+                // trigger the callback onPrevButtonClicked when the prev button is clicked
+                prevCallback.onPrevButtonClicked(listItemIndex);
+            }
+        });
+
+        nextButton.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // trigger the callback onPrevButtonClicked when the prev button is clicked
+                nextCallback.onNextButtonClicked(listItemIndex);
+            }
+        });
 
         return rootView;
     }

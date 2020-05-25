@@ -96,7 +96,7 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
                 // create the recipe steps list
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                //RecipeStepsListFragment recipeStepsListFragment = RecipeStepsListFragment.newInstance(recipe, isTwoPane);
+                // RecipeStepsListFragment recipeStepsListFragment = RecipeStepsListFragment.newInstance(recipe, isTwoPane);
                 if (recipeStepsListFragment == null) {
                     recipeStepsListFragment = RecipeStepsListFragment.newInstance(recipe, isTwoPane);
                     Log.d(TAG, "created new steps list fragment");
@@ -132,8 +132,15 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
             // create the recipe steps list in single-pane layout
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            Fragment fragment = RecipeStepsListFragment.newInstance(recipe, isTwoPane);
-            fragmentTransaction.replace(R.id.recipe_steps_list_container, fragment);
+            // Fragment fragment = RecipeStepsListFragment.newInstance(recipe, isTwoPane);
+            // fragmentTransaction.replace(R.id.recipe_steps_list_container, fragment);
+            if (recipeStepsListFragment == null) {
+                recipeStepsListFragment = RecipeStepsListFragment.newInstance(recipe, isTwoPane);
+                Log.d(TAG, "created new steps list fragment");
+            } else {
+                Log.d(TAG, "using stored steps list fragment");
+            }
+            fragmentTransaction.replace(R.id.recipe_steps_list_container, recipeStepsListFragment);
             fragmentTransaction.commit();
         }
 

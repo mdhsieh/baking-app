@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--default number of recipe card columns-->
+    <integer name="recipe_columns">1</integer>
+    <!--default height of ExoPlayer View-->
+    <dimen name="video_player_height">400dp</dimen>
+
+    <!--match_parent is a constant int of -1, see:
+    https://developer.android.com/reference/android/view/ViewGroup.LayoutParams-->
+    <!--this value is needed to have ExoPlayer take up full screen in phone landscape mode-->
+    <!--<dimen name="custom_match_parent">-1px</dimen>-->
+</resources>

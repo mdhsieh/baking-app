@@ -1,6 +1,7 @@
 package com.michaelhsieh.bakingapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
@@ -83,7 +84,10 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Ite
         recyclerView = findViewById(R.id.rv_recipes);
         adapter = new RecipeAdapter(this, recipeList);
         adapter.setClickListener(this);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        // smaller devices have one column and tablets have two columns of Recipes
+        final int columns = getResources().getInteger(R.integer.recipe_columns);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, columns, RecyclerView.VERTICAL, false);
+        //RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }

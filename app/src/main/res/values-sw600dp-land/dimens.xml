@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--same as default dimens-->
+    <!--height of ExoPlayer View in tablet landscape mode-->
+    <!--<dimen name="video_player_height">400dp</dimen>-->
+</resources>

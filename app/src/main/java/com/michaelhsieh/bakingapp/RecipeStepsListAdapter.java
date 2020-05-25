@@ -33,7 +33,7 @@ public class RecipeStepsListAdapter extends RecyclerView.Adapter<RecipeStepsList
     private boolean itemHighlightingActivated = false;
 
     /* Position of the currently selected item.
-    Default one-pane layout so no items are selected.
+    Default layout is one-pane layout so no items are selected.
     This will be used to highlight the selected item with a certain color in two-pane layout.
     This way the user knows which recipe step he or she has selected.
      */
@@ -64,7 +64,7 @@ public class RecipeStepsListAdapter extends RecyclerView.Adapter<RecipeStepsList
         if (itemHighlightingActivated) {
             if (selectedPos == position) {
                 holder.stepCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
-                Log.d(TAG, "highlighted item at position: " + selectedPos);
+                Log.d(TAG, "adapter highlighted item at position: " + selectedPos);
             } else {
                 holder.stepCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.cardview_light_background));
             }
@@ -92,15 +92,15 @@ public class RecipeStepsListAdapter extends RecyclerView.Adapter<RecipeStepsList
         @Override
         public void onClick(View view) {
             if (clickListener != null) {
-                clickListener.onRecipeStepItemClick(view, getAdapterPosition());
+                clickListener.onItemClick(view, getAdapterPosition());
             }
         }
     }
 
     // convenience method for getting data at click position
-    Step getItem(int id) {
+    /*Step getItem(int id) {
         return steps.get(id);
-    }
+    }*/
 
     // allows clicks events to be caught
     void setClickListener(ItemClickListener itemClickListener) {
@@ -109,7 +109,7 @@ public class RecipeStepsListAdapter extends RecyclerView.Adapter<RecipeStepsList
 
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
-        void onRecipeStepItemClick(View view, int position);
+        void onItemClick(View view, int position);
     }
 
     /* set which item is currently being selected by the user to update the item's color */

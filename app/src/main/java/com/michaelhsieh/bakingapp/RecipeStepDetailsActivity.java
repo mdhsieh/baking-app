@@ -26,8 +26,8 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements
     private static final String TAG = RecipeStepDetailsActivity.class.getSimpleName();
 
     // keys to store List of Steps and selected index in bundle
-    private static final String STEPS_KEY = "Steps";
-    private static final String LIST_ITEM_INDEX_KEY = "list_item_index";
+    private static final String KEY_STEPS = "Steps";
+    private static final String KEY_LIST_ITEM_INDEX = "list_item_index";
 
     // List of Steps key when retrieving Intent
     private static final String EXTRA_STEPS = "Steps";
@@ -47,8 +47,8 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements
         // get the ArrayList of Steps from the Intent that started this Activity
         Intent intent = getIntent();
         if (savedInstanceState != null) {
-            steps = savedInstanceState.getParcelableArrayList(STEPS_KEY);
-            stepIndex = savedInstanceState.getInt(LIST_ITEM_INDEX_KEY);
+            steps = savedInstanceState.getParcelableArrayList(KEY_STEPS);
+            stepIndex = savedInstanceState.getInt(KEY_LIST_ITEM_INDEX);
             Log.d(TAG, "saved state on orientation change, step index is: " + stepIndex);
         } else {
             steps = intent.getParcelableArrayListExtra(EXTRA_STEPS);
@@ -105,7 +105,7 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(outState);
 
-        outState.putParcelableArrayList(STEPS_KEY, steps);
-        outState.putInt(LIST_ITEM_INDEX_KEY, stepIndex);
+        outState.putParcelableArrayList(KEY_STEPS, steps);
+        outState.putInt(KEY_LIST_ITEM_INDEX, stepIndex);
     }
 }

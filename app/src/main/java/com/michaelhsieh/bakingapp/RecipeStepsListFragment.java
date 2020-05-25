@@ -33,6 +33,13 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
 
     private static final String TAG = RecipeStepsListFragment.class.getSimpleName();
 
+    // key to store highlighted position in bundle
+    private static final String KEY_HIGHLIGHTED_POSITION = "highlighted_position";
+
+    // position of the highlighted recipe step, default 0
+    // should always match the selected step
+    private int highlightedPosition;
+
     // parameter argument with name that matches
     // the fragment initialization parameters
     private static final String ARG_RECIPE = "Recipe";
@@ -97,6 +104,12 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
         if (getArguments() != null) {
             recipe = getArguments().getParcelable(ARG_RECIPE);
             allowHighlighting = getArguments().getBoolean(ARG_ALLOW_HIGHLIGHTING);
+        }
+
+        // get the last highlighted position before orientation change
+        if (savedInstanceState != null) {
+            highlightedPosition = savedInstanceState.getInt(KEY_HIGHLIGHTED_POSITION);
+            Log.d(TAG, "orientation change, last highlighted position was: " + highlightedPosition);
         }
     }
 
@@ -163,17 +176,20 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
         return rootView;
     }
 
-    // in two-pane layout, the first item should be highlighted automatically when
-    // recipe steps list is initialized
+    /* In two-pane layout, the first item should be highlighted automatically when
+    recipe steps list is initialized.
+    When the screen is rotated, the item last highlighted before rotation should
+    be highlighted instead. */
     private void activateItemHighlighting() {
         if (adapter != null) {
             // allow highlighting in two-pane layout
             adapter.setItemHighlightingActivated(true);
-            // pre-selected first item so highlight automatically
-            adapter.setItemHighlightedPosition(0);
+            // highlight pre-selected first item or
+            // last selected item before orientation change
+            adapter.setItemHighlightedPosition(highlightedPosition);
+            Log.d(TAG, "highlighted step at position: " + highlightedPosition);
             // force onBindViewHolder again to update new selected item color
             adapter.notifyDataSetChanged();
-            Log.d(TAG, "highlighted first step by default");
         } else {
             Log.e(TAG, "RecipeStepsListAdapter is null");
         }
@@ -181,7 +197,7 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
 
     // called when a step in the RecipeStepsListAdapter is clicked
     @Override
-    public void onRecipeStepItemClick(View view, int position) {
+    public void onItemClick(View view, int position) {
         // trigger the callback onRecipeStepSelected when an item is clicked
         callback.onRecipeStepSelected(position);
 
@@ -189,7 +205,9 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
         This indicates to the user which recipe step they are on in
         a two-pane layout. */
         if (adapter != null && allowHighlighting) {
-            adapter.setItemHighlightedPosition(position);
+            highlightedPosition = position;
+            adapter.setItemHighlightedPosition(highlightedPosition);
+            //adapter.setItemHighlightedPosition(position);
             // force onBindViewHolder again to update new selected item color
             adapter.notifyDataSetChanged();
         }
@@ -199,5 +217,11 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
         } else {
             Log.e(TAG, "RecipeStepsListAdapter is null");
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_HIGHLIGHTED_POSITION, highlightedPosition);
     }
 }

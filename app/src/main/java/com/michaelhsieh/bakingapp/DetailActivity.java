@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 /** This Activity uses a master/detail flow to change its display depending on device screen size.
  *
- * On smaller devices, this will display the recipe steps list only.
+ * On smaller devices, this will display a one-pane layout consisting of the recipe steps list only.
  * On larger devices like tablets, this will display a two-pane layout. That is,
  * The recipe steps list will be displayed together with the selected step details.
  */
@@ -30,8 +30,11 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
     private static final String EXTRA_RECIPE = "Recipe";
 
     // keys to store List of Steps and selected index in bundle
-    private static final String STEPS_KEY = "Steps";
-    private static final String LIST_ITEM_INDEX_KEY = "list_item_index";
+    private static final String KEY_STEPS = "Steps";
+    private static final String KEY_LIST_ITEM_INDEX = "list_item_index";
+
+    // key to restore RecipeStepsListFragment after orientation change in bundle
+    private static final String KEY_LIST_FRAGMENT = "list_fragment";
 
     // List of Steps key when sending Intent
     private static final String EXTRA_STEPS = "Steps";
@@ -52,6 +55,12 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
     // A single-pane display refers to phone screens, and two-pane to larger tablet screens
     private boolean isTwoPane = false;
 
+    /* Store the RecipeStepsListFragment that's created in two-pane layout.
+    The recipe step the user selected before an orientation change should be
+    highlighted, which requires this Fragment's highlighted position to be saved.
+     */
+    private RecipeStepsListFragment recipeStepsListFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,9 +71,12 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
         recipe = intent.getParcelableExtra(EXTRA_RECIPE);
 
         if (savedInstanceState != null) {
-            steps = savedInstanceState.getParcelableArrayList(STEPS_KEY);
-            stepIndex = savedInstanceState.getInt(LIST_ITEM_INDEX_KEY);
+            steps = savedInstanceState.getParcelableArrayList(KEY_STEPS);
+            stepIndex = savedInstanceState.getInt(KEY_LIST_ITEM_INDEX);
             Log.d(TAG, "saved state on orientation change, step index is: " + stepIndex);
+
+            // Restore the RecipeStepsListFragment's instance
+            recipeStepsListFragment = (RecipeStepsListFragment) getSupportFragmentManager().getFragment(savedInstanceState, KEY_LIST_FRAGMENT);
         }
 
 
@@ -84,7 +96,13 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
                 // create the recipe steps list
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                RecipeStepsListFragment recipeStepsListFragment = RecipeStepsListFragment.newInstance(recipe, isTwoPane);
+                //RecipeStepsListFragment recipeStepsListFragment = RecipeStepsListFragment.newInstance(recipe, isTwoPane);
+                if (recipeStepsListFragment == null) {
+                    recipeStepsListFragment = RecipeStepsListFragment.newInstance(recipe, isTwoPane);
+                    Log.d(TAG, "created new steps list fragment");
+                } else {
+                    Log.d(TAG, "using stored steps list fragment");
+                }
                 fragmentTransaction.replace(R.id.recipe_steps_list_container, recipeStepsListFragment);
                 fragmentTransaction.commit();
 
@@ -158,13 +176,13 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
         }
     }
 
-    /* prev button should not appear in two-pane layout, so do nothing */
+    /* prev button should not appear in two-pane layout, so do nothing on click*/
     @Override
     public void onPrevButtonClicked(int position) {
 
     }
 
-    /* next button should not appear in two-pane layout, so do nothing */
+    /* next button should not appear in two-pane layout, so do nothing on click*/
     @Override
     public void onNextButtonClicked(int position) {
 
@@ -178,7 +196,14 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(outState);
 
-        outState.putParcelableArrayList(STEPS_KEY, steps);
-        outState.putInt(LIST_ITEM_INDEX_KEY, stepIndex);
+        outState.putParcelableArrayList(KEY_STEPS, steps);
+        outState.putInt(KEY_LIST_ITEM_INDEX, stepIndex);
+
+        /* Save the RecipeStepsListFragment's instance
+        because the position that the user selected right before
+        any orientation change should be saved.
+        The position is used to highlight the user's selected step in two-pane layout.
+        */
+        getSupportFragmentManager().putFragment(outState, KEY_LIST_FRAGMENT, recipeStepsListFragment);
     }
 }

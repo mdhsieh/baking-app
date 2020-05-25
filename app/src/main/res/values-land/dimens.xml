@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--height of ExoPlayer View in phone landscape mode,
-    takes up full screen-->
-    <!--<dimen name="video_player_height">@dimen/custom_match_parent</dimen>-->
+    takes up more of the screen-->
+    <dimen name="video_player_height">500dp</dimen>
 </resources>

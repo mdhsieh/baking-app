@@ -1,5 +1,6 @@
 package com.michaelhsieh.bakingapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -28,6 +29,10 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
     // Recipe key when retrieving Intent
     private static final String EXTRA_RECIPE = "Recipe";
 
+    // keys to store List of Steps and selected index in bundle
+    private static final String STEPS_KEY = "Steps";
+    private static final String LIST_ITEM_INDEX_KEY = "list_item_index";
+
     // List of Steps key when sending Intent
     private static final String EXTRA_STEPS = "Steps";
     // index key when sending Intent
@@ -39,6 +44,9 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
     // list index of the selected recipe step
     // default value is 0
     private int stepIndex;
+
+    // ArrayList to hold the List of Steps
+    ArrayList<Step> steps;
 
     // Track whether to display a two-pane or single-pane UI
     // A single-pane display refers to phone screens, and two-pane to larger tablet screens
@@ -52,6 +60,12 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
         // get the Recipe from the Intent that started this Activity
         Intent intent = getIntent();
         recipe = intent.getParcelableExtra(EXTRA_RECIPE);
+
+        if (savedInstanceState != null) {
+            steps = savedInstanceState.getParcelableArrayList(STEPS_KEY);
+            stepIndex = savedInstanceState.getInt(LIST_ITEM_INDEX_KEY);
+            Log.d(TAG, "saved state on orientation change, step index is: " + stepIndex);
+        }
 
 
         // determine if you're creating a two-pane or single-pane display
@@ -76,7 +90,13 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
 
                 // start with the first step at position 0
                 // create a new ArrayList using the List of Steps
-                ArrayList<Step> steps = new ArrayList<Step>(recipe.getSteps());
+
+                // if no orientation change
+                if (steps == null) {
+                    steps = new ArrayList<Step>(recipe.getSteps());
+                    Log.d(TAG, "onCreate, created new list of steps");
+                }
+                //ArrayList<Step> steps = new ArrayList<Step>(recipe.getSteps());
 
                 // In two-pane mode, add initial RecipeStepDetailsFragment to the screen
                 fragmentTransaction = fragmentManager.beginTransaction();
@@ -105,7 +125,14 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
     @Override
     public void onRecipeStepSelected(int position) {
         // create a new ArrayList using the List of Steps
-        ArrayList<Step> steps = new ArrayList<Step>(recipe.getSteps());
+
+        // if no orientation change
+        if (steps == null) {
+            steps = new ArrayList<Step>(recipe.getSteps());
+            Log.d(TAG, "onRecipeStepSelected, creating new list of steps");
+        }
+        //ArrayList<Step> steps = new ArrayList<Step>(recipe.getSteps());
+
         stepIndex = position;
 
         // Handle the two-pane case and replace existing fragment right when a new step is selected from the master list
@@ -141,5 +168,17 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
     @Override
     public void onNextButtonClicked(int position) {
 
+    }
+
+    /**
+     * Save the state this Activity, ex. on orientation change
+     */
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelableArrayList(STEPS_KEY, steps);
+        outState.putInt(LIST_ITEM_INDEX_KEY, stepIndex);
     }
 }

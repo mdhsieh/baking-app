@@ -1,5 +1,6 @@
 package com.michaelhsieh.bakingapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -24,6 +25,10 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements
 
     private static final String TAG = RecipeStepDetailsActivity.class.getSimpleName();
 
+    // keys to store List of Steps and selected index in bundle
+    private static final String STEPS_KEY = "Steps";
+    private static final String LIST_ITEM_INDEX_KEY = "list_item_index";
+
     // List of Steps key when retrieving Intent
     private static final String EXTRA_STEPS = "Steps";
     // index key when retrieving Intent
@@ -41,12 +46,15 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements
 
         // get the ArrayList of Steps from the Intent that started this Activity
         Intent intent = getIntent();
-        steps = intent.getParcelableArrayListExtra(EXTRA_STEPS);
-        if (steps != null) {
-            //create a new ArrayList using the List of Steps
-            //ArrayList<Step> steps = new ArrayList<Step>(stepsList);
+        if (savedInstanceState != null) {
+            steps = savedInstanceState.getParcelableArrayList(STEPS_KEY);
+            stepIndex = savedInstanceState.getInt(LIST_ITEM_INDEX_KEY);
+            Log.d(TAG, "saved state on orientation change, step index is: " + stepIndex);
+        } else {
+            steps = intent.getParcelableArrayListExtra(EXTRA_STEPS);
             stepIndex = intent.getIntExtra(EXTRA_LIST_ITEM_INDEX, 0);
-
+        }
+        if (steps != null) {
             // this Activity will only be created in the single-pane layout, so show buttons
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -87,5 +95,17 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements
                     .replace(R.id.recipe_step_details_container, nextRecipeStepDetailsFragment)
                     .commit();
         }
+    }
+
+    /**
+     * Save the state this Activity, ex. on orientation change
+     */
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelableArrayList(STEPS_KEY, steps);
+        outState.putInt(LIST_ITEM_INDEX_KEY, stepIndex);
     }
 }

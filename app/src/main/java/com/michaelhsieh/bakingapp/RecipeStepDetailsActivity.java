@@ -51,7 +51,6 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements
         // from orientation change
         if (savedInstanceState != null) {
             stepIndex = savedInstanceState.getInt(KEY_LIST_ITEM_INDEX);
-            Log.d(TAG, "saved state on orientation change, step index is: " + stepIndex);
         } else {
             stepIndex = intent.getIntExtra(EXTRA_LIST_ITEM_INDEX, 0);
         }

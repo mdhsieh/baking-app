@@ -69,9 +69,9 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
         Intent intent = getIntent();
         recipe = intent.getParcelableExtra(EXTRA_RECIPE);
 
+        // get the selected step index and recipe steps list from orientation change
         if (savedInstanceState != null) {
             stepIndex = savedInstanceState.getInt(KEY_LIST_ITEM_INDEX);
-            Log.d(TAG, "saved state on orientation change, step index is: " + stepIndex);
 
             // Restore the RecipeStepsListFragment's instance
             recipeStepsListFragment = (RecipeStepsListFragment) getSupportFragmentManager().getFragment(savedInstanceState, KEY_LIST_FRAGMENT);
@@ -105,13 +105,6 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
 
                 // start with the first step at position 0
                 // create a new ArrayList using the List of Steps
-
-                // if no orientation change
-                /*if (steps == null) {
-                    steps = new ArrayList<Step>(recipe.getSteps());
-                    Log.d(TAG, "onCreate, created new list of steps");
-                }*/
-                //ArrayList<Step> steps = new ArrayList<Step>(recipe.getSteps());
                 steps = new ArrayList<Step>(recipe.getSteps());
 
                 /* Old fragments are retained on orientation change because Activity uses
@@ -165,13 +158,6 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
     @Override
     public void onRecipeStepSelected(int position) {
         // create a new ArrayList using the List of Steps
-
-        // if no orientation change
-        /*if (steps == null) {
-            steps = new ArrayList<Step>(recipe.getSteps());
-            Log.d(TAG, "onRecipeStepSelected, creating new list of steps");
-        }*/
-        //ArrayList<Step> steps = new ArrayList<Step>(recipe.getSteps());
         steps = new ArrayList<Step>(recipe.getSteps());
 
         stepIndex = position;

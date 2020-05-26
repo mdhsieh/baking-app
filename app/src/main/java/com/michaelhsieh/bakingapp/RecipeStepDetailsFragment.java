@@ -167,20 +167,16 @@ public class RecipeStepDetailsFragment extends Fragment {
         the video URL is not available.
          */
         String thumbnailURL = steps.get(listItemIndex).getThumbnailURL();
-        Log.d(TAG, "video url is: " + videoUrl);
         if (videoUrl.isEmpty() && thumbnailURL.isEmpty()) {
-            Log.d(TAG, "empty video url");
             mPlayerView.setVisibility(View.GONE);
         }
         else if (videoUrl.isEmpty() && !thumbnailURL.isEmpty()) {
             mPlayerView.setVisibility(View.VISIBLE);
             initializePlayer(Uri.parse(thumbnailURL));
-            Log.d(TAG, "initialized player");
         }
         else {
             mPlayerView.setVisibility(View.VISIBLE);
             initializePlayer(Uri.parse(videoUrl));
-            Log.d(TAG, "initialized player");
         }
 
         // get the previous and next buttons
@@ -265,8 +261,6 @@ public class RecipeStepDetailsFragment extends Fragment {
             mExoplayer.stop();
             mExoplayer.release();
             mExoplayer = null;
-
-            Log.d(TAG, "released player");
         }
     }
 

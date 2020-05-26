@@ -29,8 +29,7 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
     // Recipe key when retrieving Intent
     private static final String EXTRA_RECIPE = "Recipe";
 
-    // keys to store List of Steps and selected index in bundle
-    private static final String KEY_STEPS = "Steps";
+    // key to store selected Step index in bundle
     private static final String KEY_LIST_ITEM_INDEX = "list_item_index";
 
     // key to restore RecipeStepsListFragment after orientation change in bundle
@@ -71,7 +70,6 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
         recipe = intent.getParcelableExtra(EXTRA_RECIPE);
 
         if (savedInstanceState != null) {
-            steps = savedInstanceState.getParcelableArrayList(KEY_STEPS);
             stepIndex = savedInstanceState.getInt(KEY_LIST_ITEM_INDEX);
             Log.d(TAG, "saved state on orientation change, step index is: " + stepIndex);
 
@@ -96,13 +94,12 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
                 // create the recipe steps list
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                // RecipeStepsListFragment recipeStepsListFragment = RecipeStepsListFragment.newInstance(recipe, isTwoPane);
                 if (recipeStepsListFragment == null) {
+                    // create new steps list fragment
                     recipeStepsListFragment = RecipeStepsListFragment.newInstance(recipe, isTwoPane);
-                    Log.d(TAG, "created new steps list fragment");
-                } else {
-                    Log.d(TAG, "using stored steps list fragment");
                 }
+                // else
+                    // using stored steps list fragment
                 fragmentTransaction.replace(R.id.recipe_steps_list_container, recipeStepsListFragment);
                 fragmentTransaction.commit();
 
@@ -110,18 +107,12 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
                 // create a new ArrayList using the List of Steps
 
                 // if no orientation change
-                if (steps == null) {
+                /*if (steps == null) {
                     steps = new ArrayList<Step>(recipe.getSteps());
                     Log.d(TAG, "onCreate, created new list of steps");
-                }
+                }*/
                 //ArrayList<Step> steps = new ArrayList<Step>(recipe.getSteps());
-
-                // In two-pane mode, add initial RecipeStepDetailsFragment to the screen
-                // fragmentTransaction = fragmentManager.beginTransaction();
-                // use newInstance method instead of constructor, passing in the list of steps and selected step index
-                // Fragment recipeStepDetailsFragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex, isTwoPane);
-                // fragmentTransaction.replace(R.id.recipe_step_details_container, recipeStepDetailsFragment);
-                // fragmentTransaction.commit();
+                steps = new ArrayList<Step>(recipe.getSteps());
 
                 /* Old fragments are retained on orientation change because Activity uses
                 onSavedInstanceState to save state.
@@ -130,17 +121,25 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
                 Otherwise, reuse the existing fragment.
                  */
                 if (savedInstanceState == null) {
+
+                    /* If you don't check savedInstanceState == null and just replace with new Fragment,
+                    then when the screen is rotated, RecipeStepDetailsFragment is created twice.
+                    The first Fragment will initialize ExoPlayer then call the Fragment's onDestroy,
+                    skipping onPause and onStop. That means ExoPlayer will not be released in onPause.
+                    Once the screen is rotated several times, an ExoPlayer Out Of Memory error will occur
+                    and the app will crash.
+                     */
+
                     // In two-pane mode, add initial RecipeStepDetailsFragment to the screen
                     fragmentTransaction = fragmentManager.beginTransaction();
                     // use newInstance method instead of constructor, passing in the list of steps and selected step index
                     Fragment recipeStepDetailsFragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex, isTwoPane);
                     fragmentTransaction.replace(R.id.recipe_step_details_container, recipeStepDetailsFragment);
                     fragmentTransaction.commit();
-                } else {
-                    // do nothing - fragment is recreated automatically
-                    Log.d(TAG, "fragment is being reused");
                 }
-
+                // else
+                    // do nothing - fragment is recreated automatically
+                    // recipe step details fragment is being reused
             }
             else {
                 Log.e(TAG, "recipe retrieved from intent was null");
@@ -150,14 +149,12 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
             // create the recipe steps list in single-pane layout
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            // Fragment fragment = RecipeStepsListFragment.newInstance(recipe, isTwoPane);
-            // fragmentTransaction.replace(R.id.recipe_steps_list_container, fragment);
             if (recipeStepsListFragment == null) {
+                // create new steps list fragment
                 recipeStepsListFragment = RecipeStepsListFragment.newInstance(recipe, isTwoPane);
-                Log.d(TAG, "created new steps list fragment");
-            } else {
-                Log.d(TAG, "using stored steps list fragment");
             }
+            // else
+                // using stored steps list fragment
             fragmentTransaction.replace(R.id.recipe_steps_list_container, recipeStepsListFragment);
             fragmentTransaction.commit();
         }
@@ -170,11 +167,12 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
         // create a new ArrayList using the List of Steps
 
         // if no orientation change
-        if (steps == null) {
+        /*if (steps == null) {
             steps = new ArrayList<Step>(recipe.getSteps());
             Log.d(TAG, "onRecipeStepSelected, creating new list of steps");
-        }
+        }*/
         //ArrayList<Step> steps = new ArrayList<Step>(recipe.getSteps());
+        steps = new ArrayList<Step>(recipe.getSteps());
 
         stepIndex = position;
 
@@ -201,13 +199,13 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
         }
     }
 
-    /* prev button should not appear in two-pane layout, so do nothing on click*/
+    /* prev button should not appear in two-pane layout, so do nothing on click */
     @Override
     public void onPrevButtonClicked(int position) {
 
     }
 
-    /* next button should not appear in two-pane layout, so do nothing on click*/
+    /* next button should not appear in two-pane layout, so do nothing on click */
     @Override
     public void onNextButtonClicked(int position) {
 
@@ -221,14 +219,13 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(outState);
 
-        outState.putParcelableArrayList(KEY_STEPS, steps);
+        // save the selected step index, ex. on orientation change
         outState.putInt(KEY_LIST_ITEM_INDEX, stepIndex);
 
         /* Save the RecipeStepsListFragment's instance
         because the position that the user selected right before
         any orientation change should be saved.
-        The position is used to highlight the user's selected step in two-pane layout.
-        */
+        The position is used to highlight the user's selected step in two-pane layout. */
         getSupportFragmentManager().putFragment(outState, KEY_LIST_FRAGMENT, recipeStepsListFragment);
     }
 }

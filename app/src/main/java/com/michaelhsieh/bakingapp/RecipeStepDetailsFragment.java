@@ -66,9 +66,9 @@ public class RecipeStepDetailsFragment extends Fragment {
     // which is DetailActivity
     private OnPrevButtonClickListener prevCallback;
 
-    // OnPrevButtonClickListener interface, calls a method in the host activity named onPrevButtonClicked
+    /* OnPrevButtonClickListener interface, calls a method in the host activity named onPrevButtonClicked
 
-    /* onPrevButtonClicked will change the step details fragment to match the previous step,
+    onPrevButtonClicked will change the step details fragment to match the previous step,
     or do nothing if already at the first step. */
     public interface OnPrevButtonClickListener
     {
@@ -78,9 +78,9 @@ public class RecipeStepDetailsFragment extends Fragment {
     // Define a new interface OnNextButtonClickListener that triggers a callback in the host activity
     private OnNextButtonClickListener nextCallback;
 
-    // OnNextButtonClickListener interface, calls a method in the host activity named onNextButtonClicked
+    /* OnNextButtonClickListener interface, calls a method in the host activity named onNextButtonClicked
 
-    /* onNextButtonClicked will change the step details fragment to match the next step,
+    onNextButtonClicked will change the step details fragment to match the next step,
     or do nothing if already at the last step. */
     public interface OnNextButtonClickListener
     {
@@ -119,8 +119,6 @@ public class RecipeStepDetailsFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
-        //Log.d(TAG, "onAttach");
-
         // This makes sure that the host activity has implemented the callback interface
         // If not, it throws an exception
         try {
@@ -145,8 +143,6 @@ public class RecipeStepDetailsFragment extends Fragment {
             listItemIndex = getArguments().getInt(ARG_LIST_ITEM_INDEX);
             hideButtons = getArguments().getBoolean(ARG_HIDE_BUTTONS);
         }
-
-        //Log.d(TAG, "onCreate");
     }
 
     @Override
@@ -162,18 +158,10 @@ public class RecipeStepDetailsFragment extends Fragment {
         // Initialize the player view.
         mPlayerView = (SimpleExoPlayerView) rootView.findViewById(R.id.playerView);
 
-        // release player and initialize again if ex. orientation changes
-        // because don't want same audio playing twice
-        /*if (mExoplayer != null)
-        {
-            Log.d(TAG, "ExoPlayer is not null in onCreate, releasing player");
-            mExoplayer.release();
-        }*/
-        Log.d(TAG, "onCreateView");
-
         // Initialize the player.
         // get selected step's video URL
         String videoUrl = steps.get(listItemIndex).getVideoURL();
+
         /* In the online JSON data, step 5 of Nutella Pie has its video URL misplaced
         in the thumbnail URL instead. Use this thumbnail URL if it's available and
         the video URL is not available.
@@ -187,12 +175,12 @@ public class RecipeStepDetailsFragment extends Fragment {
         else if (videoUrl.isEmpty() && !thumbnailURL.isEmpty()) {
             mPlayerView.setVisibility(View.VISIBLE);
             initializePlayer(Uri.parse(thumbnailURL));
-            Log.d(TAG, "initializing ExoPlayer with thumbnail URL");
+            Log.d(TAG, "initialized player");
         }
         else {
             mPlayerView.setVisibility(View.VISIBLE);
             initializePlayer(Uri.parse(videoUrl));
-            Log.d(TAG, "initialized ExoPlayer");
+            Log.d(TAG, "initialized player");
         }
 
         // get the previous and next buttons
@@ -250,7 +238,6 @@ public class RecipeStepDetailsFragment extends Fragment {
         {
 
             if (getContext() == null) {
-                Log.e(TAG, "null returned from getContext()");
                 throw new RuntimeException("null returned from getContext()");
             }
 
@@ -279,7 +266,7 @@ public class RecipeStepDetailsFragment extends Fragment {
             mExoplayer.release();
             mExoplayer = null;
 
-            Log.d(TAG, "successfully released ExoPlayer");
+            Log.d(TAG, "released player");
         }
     }
 
@@ -289,24 +276,12 @@ public class RecipeStepDetailsFragment extends Fragment {
      app is still visible in split screen. onPause and onStop are guaranteed to be called.
 
      onDestroy may not be called at all and should not be used for releasing resources.
+
+     Source: https://github.com/google/ExoPlayer/issues/7117
      */
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause");
         releasePlayer();
-        // Log.d(TAG, "released ExoPlayer");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy");
     }
 }

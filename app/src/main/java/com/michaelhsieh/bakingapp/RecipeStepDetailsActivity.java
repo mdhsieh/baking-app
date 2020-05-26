@@ -34,6 +34,8 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements
     // index key when retrieving Intent
     private static final String EXTRA_LIST_ITEM_INDEX = "list_item_index";
 
+    //private static final String STEP_DETAILS_FRAGMENT_TAG = "recipe_step_details_fragment";
+
     // list of steps to create step details from
     private ArrayList<Step> steps;
     // list index of selected step
@@ -58,9 +60,47 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements
             // this Activity will only be created in the single-pane layout, so show buttons
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            Fragment fragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex, false);
-            fragmentTransaction.replace(R.id.recipe_step_details_container, fragment);
-            fragmentTransaction.commit();
+            // Fragment fragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex, false);
+            // fragmentTransaction.replace(R.id.recipe_step_details_container, fragment);
+            // fragmentTransaction.commit();
+
+            /* Old fragments are retained on orientation change because Activity uses
+            onSavedInstanceState.
+            If the fragment does not exist, create a new RecipeStepDetailsFragment.
+            Otherwise, reuse the existing fragment with the given tag.
+             */
+            /*if (savedInstanceState == null) {
+                 Fragment fragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex, false);
+                 fragmentTransaction.replace(R.id.recipe_step_details_container, fragment, STEP_DETAILS_FRAGMENT_TAG);
+                 fragmentTransaction.commit();
+            } else {
+                // do nothing - fragment is recreated automatically
+                Fragment fragment = (RecipeStepDetailsFragment) getSupportFragmentManager().findFragmentByTag(STEP_DETAILS_FRAGMENT_TAG);
+                if (fragment != null) {
+                    Log.d(TAG, "fragment being reused is " + fragment.getTag());
+                }
+            }*/
+
+            /* Old fragments are retained on orientation change because Activity uses
+            onSavedInstanceState to save state.
+            If the fragment does not exist, create a new RecipeStepDetailsFragment.
+            Otherwise, reuse the existing fragment.
+             */
+            if (savedInstanceState == null) {
+                /* If you don't check savedInstanceState == null and just replace with new Fragment,
+                then when the screen is rotated, RecipeStepDetailsFragment is created twice.
+                The first Fragment will initialize ExoPlayer then call the Fragment's onDestroy,
+                skipping onPause and onStop. That means ExoPlayer will not be released in onPause.
+                Once the screen is rotated several times, an ExoPlayer Out Of Memory error will occur
+                and the app will crash.
+                 */
+                 Fragment fragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex, false);
+                 fragmentTransaction.replace(R.id.recipe_step_details_container, fragment);
+                 fragmentTransaction.commit();
+            } else {
+                // do nothing - fragment is recreated automatically
+                Log.d(TAG, "fragment is being reused");
+            }
         }
         else {
             Log.e(TAG, "steps retrieved from intent was null");

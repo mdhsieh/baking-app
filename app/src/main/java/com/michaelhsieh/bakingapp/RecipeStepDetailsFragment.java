@@ -119,6 +119,8 @@ public class RecipeStepDetailsFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
+        //Log.d(TAG, "onAttach");
+
         // This makes sure that the host activity has implemented the callback interface
         // If not, it throws an exception
         try {
@@ -143,6 +145,8 @@ public class RecipeStepDetailsFragment extends Fragment {
             listItemIndex = getArguments().getInt(ARG_LIST_ITEM_INDEX);
             hideButtons = getArguments().getBoolean(ARG_HIDE_BUTTONS);
         }
+
+        //Log.d(TAG, "onCreate");
     }
 
     @Override
@@ -165,6 +169,7 @@ public class RecipeStepDetailsFragment extends Fragment {
             Log.d(TAG, "ExoPlayer is not null in onCreate, releasing player");
             mExoplayer.release();
         }*/
+        Log.d(TAG, "onCreateView");
 
         // Initialize the player.
         // get selected step's video URL
@@ -176,7 +181,7 @@ public class RecipeStepDetailsFragment extends Fragment {
         String thumbnailURL = steps.get(listItemIndex).getThumbnailURL();
         Log.d(TAG, "video url is: " + videoUrl);
         if (videoUrl.isEmpty() && thumbnailURL.isEmpty()) {
-            Log.d(TAG, "empty url");
+            Log.d(TAG, "empty video url");
             mPlayerView.setVisibility(View.GONE);
         }
         else if (videoUrl.isEmpty() && !thumbnailURL.isEmpty()) {
@@ -273,6 +278,8 @@ public class RecipeStepDetailsFragment extends Fragment {
             mExoplayer.stop();
             mExoplayer.release();
             mExoplayer = null;
+
+            Log.d(TAG, "successfully released ExoPlayer");
         }
     }
 
@@ -286,7 +293,20 @@ public class RecipeStepDetailsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        Log.d(TAG, "onPause");
         releasePlayer();
-        Log.d(TAG, "released ExoPlayer");
+        // Log.d(TAG, "released ExoPlayer");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
     }
 }

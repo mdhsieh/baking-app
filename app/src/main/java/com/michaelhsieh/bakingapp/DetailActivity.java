@@ -117,11 +117,29 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsList
                 //ArrayList<Step> steps = new ArrayList<Step>(recipe.getSteps());
 
                 // In two-pane mode, add initial RecipeStepDetailsFragment to the screen
-                fragmentTransaction = fragmentManager.beginTransaction();
+                // fragmentTransaction = fragmentManager.beginTransaction();
                 // use newInstance method instead of constructor, passing in the list of steps and selected step index
-                Fragment recipeStepDetailsFragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex, isTwoPane);
-                fragmentTransaction.replace(R.id.recipe_step_details_container, recipeStepDetailsFragment);
-                fragmentTransaction.commit();
+                // Fragment recipeStepDetailsFragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex, isTwoPane);
+                // fragmentTransaction.replace(R.id.recipe_step_details_container, recipeStepDetailsFragment);
+                // fragmentTransaction.commit();
+
+                /* Old fragments are retained on orientation change because Activity uses
+                onSavedInstanceState to save state.
+
+                If the fragment does not exist, create a new RecipeStepDetailsFragment.
+                Otherwise, reuse the existing fragment.
+                 */
+                if (savedInstanceState == null) {
+                    // In two-pane mode, add initial RecipeStepDetailsFragment to the screen
+                    fragmentTransaction = fragmentManager.beginTransaction();
+                    // use newInstance method instead of constructor, passing in the list of steps and selected step index
+                    Fragment recipeStepDetailsFragment = RecipeStepDetailsFragment.newInstance(steps, stepIndex, isTwoPane);
+                    fragmentTransaction.replace(R.id.recipe_step_details_container, recipeStepDetailsFragment);
+                    fragmentTransaction.commit();
+                } else {
+                    // do nothing - fragment is recreated automatically
+                    Log.d(TAG, "fragment is being reused");
+                }
 
             }
             else {

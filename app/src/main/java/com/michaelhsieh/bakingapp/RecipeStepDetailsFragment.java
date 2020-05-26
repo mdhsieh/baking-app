@@ -160,11 +160,11 @@ public class RecipeStepDetailsFragment extends Fragment {
 
         // release player and initialize again if ex. orientation changes
         // because don't want same audio playing twice
-        if (mExoplayer != null)
+        /*if (mExoplayer != null)
         {
             Log.d(TAG, "ExoPlayer is not null in onCreate, releasing player");
             mExoplayer.release();
-        }
+        }*/
 
         // Initialize the player.
         // get selected step's video URL

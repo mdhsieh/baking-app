@@ -1,22 +1,35 @@
 package com.michaelhsieh.bakingapp;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.widget.RemoteViews;
 
 /**
  * Implementation of App Widget functionality.
+ *
+ * Displays the ingredients list of the user's selected recipe.
  */
 public class RecipeWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
+
+        // TODO: update ingredients list text
+        //CharSequence widgetText = context.getString(R.string.default_ingredients_list_text);
+        //views.setTextViewText(R.id.appwidget_text, widgetText);
+
+        // Create an Intent to launch MainActivity
+        Intent intent = new Intent(context, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Widgets allow click handlers to only launch pending intents
+        views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

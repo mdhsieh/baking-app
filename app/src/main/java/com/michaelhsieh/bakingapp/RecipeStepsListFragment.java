@@ -1,5 +1,7 @@
 package com.michaelhsieh.bakingapp;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -109,7 +111,6 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
         // get the last highlighted position before orientation change
         if (savedInstanceState != null) {
             highlightedPosition = savedInstanceState.getInt(KEY_HIGHLIGHTED_POSITION);
-            Log.d(TAG, "orientation change, last highlighted position was: " + highlightedPosition);
         }
     }
 
@@ -143,6 +144,9 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
                 ingredientsDisplay.append(ingredientInfo);
             }
 
+            // get the recipe name and ingredients and update the recipe widget
+            handleActionUpdateRecipeWidgets(getContext(), recipe.getName(), ingredientsDisplay.getText().toString());
+
             List<Step> steps = recipe.getSteps();
 
             /* Use isAdded to avoid a null pointer exception when the fragment is
@@ -164,7 +168,6 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
                 the step the user selects to be highlighted.
                  */
                 if (allowHighlighting) {
-                    Log.d(TAG, "highlighting is allowed");
                     activateItemHighlighting();
                 }
             }
@@ -187,7 +190,6 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
             // highlight pre-selected first item or
             // last selected item before orientation change
             adapter.setItemHighlightedPosition(highlightedPosition);
-            Log.d(TAG, "highlighted step at position: " + highlightedPosition);
             // force onBindViewHolder again to update new selected item color
             adapter.notifyDataSetChanged();
         } else {
@@ -223,5 +225,26 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_HIGHLIGHTED_POSITION, highlightedPosition);
+    }
+
+    /**
+     * Update recipe widget ingredients list to match the selected Recipe
+     */
+    //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public static void handleActionUpdateRecipeWidgets(Context context, String recipeName, String ingredients)
+    {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName name = new ComponentName(context, RecipeWidget.class);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(name);
+
+        // Trigger the data update to handle the widget ingredient text and force a data refresh
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.appwidget_text);
+
+        // Update all widgets
+        RecipeWidget.updateRecipeWidgets(context, appWidgetManager,
+                recipeName, ingredients, appWidgetIds);
+
+        Log.d(TAG, "updated recipe widget with recipe: " + recipeName );
+        Log.d(TAG, "ingredients: " + ingredients);
     }
 }

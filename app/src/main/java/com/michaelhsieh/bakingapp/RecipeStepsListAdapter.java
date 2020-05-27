@@ -64,7 +64,6 @@ public class RecipeStepsListAdapter extends RecyclerView.Adapter<RecipeStepsList
         if (itemHighlightingActivated) {
             if (selectedPos == position) {
                 holder.stepCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
-                Log.d(TAG, "adapter highlighted item at position: " + selectedPos);
             } else {
                 holder.stepCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.cardview_light_background));
             }

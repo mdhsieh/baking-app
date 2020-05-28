@@ -26,7 +26,6 @@ public class RecipeWidget extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
 
-        // TODO: open up MainActivity when widget first created
         //CharSequence widgetText = context.getString(R.string.default_ingredients_list_text);
         //views.setTextViewText(R.id.appwidget_text, widgetText);
         // if no recipe was selected yet, don't set the widget text
@@ -64,9 +63,7 @@ public class RecipeWidget extends AppWidgetProvider {
         // user to open up MainActivity when clicked
         for (int appWidgetId : appWidgetIds) {
 
-            Log.d(TAG, "creating pending intent and attacking onclick listener");
-
-            // Create an Intent to launch ExampleActivity
+            // Create an Intent to launch MainActivity
             Intent intent = new Intent(context, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -75,14 +72,14 @@ public class RecipeWidget extends AppWidgetProvider {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
             views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);
 
-            // don'tuse RecipeWidget's updateAppWidget in onUpdate because
+            // don't use RecipeWidget's updateAppWidget in onUpdate because
             // we only update widgets when user selects a recipe
             //updateAppWidget(context, appWidgetManager, "", "", appWidgetId);
 
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
-        Log.d(TAG,"onUpdate");
+        //Log.d(TAG,"onUpdate");
     }
 
     /**

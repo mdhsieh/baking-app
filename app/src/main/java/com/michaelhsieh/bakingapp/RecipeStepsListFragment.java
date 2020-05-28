@@ -1,7 +1,5 @@
 package com.michaelhsieh.bakingapp;
 
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -152,7 +150,8 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
 
             // get the recipe name and ingredients and update the recipe widget
             //handleActionUpdateRecipeWidgets(getContext(), recipe.getName(), ingredientsDisplay.getText().toString());
-            handleActionUpdateRecipeWidgets(getContext(), recipe.getName(), widgetIngredients.toString());
+            //handleActionUpdateRecipeWidgets(getContext(), recipe.getName(), widgetIngredients.toString());
+            RecipeIngredientsDisplayService.handleActionUpdateRecipeWidgets(getContext(), recipe.getName(), widgetIngredients.toString());
 
             List<Step> steps = recipe.getSteps();
 
@@ -238,7 +237,7 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
      * Update recipe widget ingredients list to match the selected Recipe
      */
     //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public static void handleActionUpdateRecipeWidgets(Context context, String recipeName, String ingredients)
+    /*public static void handleActionUpdateRecipeWidgets(Context context, String recipeName, String ingredients)
     {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         ComponentName name = new ComponentName(context, RecipeWidget.class);
@@ -254,5 +253,5 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
         Log.d(TAG, "updated recipe widget");
         //Log.d(TAG, "updated recipe widget with recipe: " + recipeName );
         //Log.d(TAG, "ingredients: " + ingredients);
-    }
+    }*/
 }

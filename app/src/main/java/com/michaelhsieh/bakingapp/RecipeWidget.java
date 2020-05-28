@@ -60,17 +60,29 @@ public class RecipeWidget extends AppWidgetProvider {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         } */
 
-        // When the first widget is created, set default text and allow
+        // When the first widget is created, allow
         // user to open up MainActivity when clicked
-
-        // this will also reset the ingredients text to default text every 30 minutes
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, "", "", appWidgetId);
+
+            Log.d(TAG, "creating pending intent and attacking onclick listener");
+
+            // Create an Intent to launch ExampleActivity
+            Intent intent = new Intent(context, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            // Get the layout for the Recipe Widget and attach an on-click listener
+            // to the button
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
+            views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);
+
+            // don'tuse RecipeWidget's updateAppWidget in onUpdate because
+            // we only update widgets when user selects a recipe
+            //updateAppWidget(context, appWidgetManager, "", "", appWidgetId);
+
+            // Instruct the widget manager to update the widget
+            appWidgetManager.updateAppWidget(appWidgetId, views);
         }
         Log.d(TAG,"onUpdate");
-
-        // don't update widgets in onUpdate because we only update widgets when user
-        // selects a recipe
     }
 
     /**
@@ -82,8 +94,6 @@ public class RecipeWidget extends AppWidgetProvider {
      * @param ingredients      The ingredients of that recipe
      * @param appWidgetIds     Array of widget Ids to be updated
      */
-
-    //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public static void updateRecipeWidgets(Context context, AppWidgetManager appWidgetManager,
                                           String recipeName, String ingredients, int[] appWidgetIds)
     {

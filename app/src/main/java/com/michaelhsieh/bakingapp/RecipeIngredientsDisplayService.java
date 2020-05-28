@@ -16,7 +16,7 @@ public class RecipeIngredientsDisplayService {
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(name);
 
         // Trigger the data update to handle the widget ingredient text and force a data refresh
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.appwidget_text);
+        //appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.appwidget_text);
 
         // Update all widgets
         RecipeWidgetProvider.updateRecipeWidgets(context, appWidgetManager,

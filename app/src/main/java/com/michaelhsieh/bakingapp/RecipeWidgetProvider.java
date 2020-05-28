@@ -5,8 +5,6 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 /**
@@ -14,9 +12,9 @@ import android.widget.RemoteViews;
  *
  * Displays the ingredients list of the user's selected recipe.
  */
-public class RecipeWidget extends AppWidgetProvider {
+public class RecipeWidgetProvider extends AppWidgetProvider {
 
-    private static final String TAG = RecipeWidget.class.getSimpleName();
+    private static final String TAG = RecipeWidgetProvider.class.getSimpleName();
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 String recipeName, String ingredients, int appWidgetId) {
@@ -60,7 +58,7 @@ public class RecipeWidget extends AppWidgetProvider {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
             views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);
 
-            // don't use RecipeWidget's updateAppWidget in onUpdate because
+            // don't use RecipeWidgetProvider's updateAppWidget in onUpdate because
             // we only update widgets when user selects a recipe
 
             // Instruct the widget manager to update the widget

@@ -26,12 +26,21 @@ public class RecipeWidget extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
 
-        // TODO: update ingredients list text
+        // TODO: open up MainActivity when widget first created
         //CharSequence widgetText = context.getString(R.string.default_ingredients_list_text);
         //views.setTextViewText(R.id.appwidget_text, widgetText);
-        String widgetText = recipeName + "\n" + "\n" + ingredients;
-        views.setTextViewText(R.id.appwidget_text, widgetText);
-        Log.d(TAG, "set widget text to: " + widgetText);
+        // if no recipe was selected yet, don't set the widget text
+        // set the widget text to display the selected recipe's ingredients
+        if (!recipeName.isEmpty())
+        {
+            String widgetText = recipeName + "\n" + "\n" + ingredients;
+            views.setTextViewText(R.id.appwidget_text, widgetText);
+            Log.d(TAG, "set widget text to: " + widgetText);
+        }
+        else
+        {
+            Log.d(TAG, "no recipe selected");
+        }
 
         // Create an Intent to launch MainActivity
         Intent intent = new Intent(context, MainActivity.class);
@@ -47,9 +56,21 @@ public class RecipeWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
-        /* for (int appWidgetId : appWidgetIds) {
+        /*for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         } */
+
+        // When the first widget is created, set default text and allow
+        // user to open up MainActivity when clicked
+
+        // this will also reset the ingredients text to default text every 30 minutes
+        for (int appWidgetId : appWidgetIds) {
+            updateAppWidget(context, appWidgetManager, "", "", appWidgetId);
+        }
+        Log.d(TAG,"onUpdate");
+
+        // don't update widgets in onUpdate because we only update widgets when user
+        // selects a recipe
     }
 
     /**
@@ -58,7 +79,7 @@ public class RecipeWidget extends AppWidgetProvider {
      * @param context          The calling context
      * @param appWidgetManager The widget manager
      * @param recipeName       The name of the selected recipe
-     * @param ingredients      The list of ingredients of that recipe
+     * @param ingredients      The ingredients of that recipe
      * @param appWidgetIds     Array of widget Ids to be updated
      */
 

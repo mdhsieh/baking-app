@@ -134,6 +134,9 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
         // String to store ingredient quantity, measure, and name in one line
         String ingredientInfo;
 
+        // StringBuilder to store ingredients to send to recipe widget
+        StringBuilder widgetIngredients = new StringBuilder();
+
         if (recipe != null) {
             List<Ingredient> ingredients = recipe.getIngredients();
 
@@ -142,10 +145,14 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
                 ingredientInfo = ingredient.getQuantity() + " " + ingredient.getMeasure() +
                         " " + ingredient.getIngredient() + "\n";
                 ingredientsDisplay.append(ingredientInfo);
+
+                // add ingredient info to widget ingredients text
+                widgetIngredients.append(ingredientInfo);
             }
 
             // get the recipe name and ingredients and update the recipe widget
-            handleActionUpdateRecipeWidgets(getContext(), recipe.getName(), ingredientsDisplay.getText().toString());
+            //handleActionUpdateRecipeWidgets(getContext(), recipe.getName(), ingredientsDisplay.getText().toString());
+            handleActionUpdateRecipeWidgets(getContext(), recipe.getName(), widgetIngredients.toString());
 
             List<Step> steps = recipe.getSteps();
 
@@ -215,7 +222,7 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
         }
         else if (adapter != null) {
             // single-pane layout doesn't need highlighting
-            Log.d(TAG, "RecipeStepsListAdapter highlighting not allowed in single-pane layout");
+            //Log.v(TAG, "RecipeStepsListAdapter highlighting not allowed in single-pane layout");
         } else {
             Log.e(TAG, "RecipeStepsListAdapter is null");
         }
@@ -244,7 +251,8 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
         RecipeWidget.updateRecipeWidgets(context, appWidgetManager,
                 recipeName, ingredients, appWidgetIds);
 
-        Log.d(TAG, "updated recipe widget with recipe: " + recipeName );
-        Log.d(TAG, "ingredients: " + ingredients);
+        Log.d(TAG, "updated recipe widget");
+        //Log.d(TAG, "updated recipe widget with recipe: " + recipeName );
+        //Log.d(TAG, "ingredients: " + ingredients);
     }
 }

@@ -149,8 +149,6 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
             }
 
             // get the recipe name and ingredients and update the recipe widget
-            //handleActionUpdateRecipeWidgets(getContext(), recipe.getName(), ingredientsDisplay.getText().toString());
-            //handleActionUpdateRecipeWidgets(getContext(), recipe.getName(), widgetIngredients.toString());
             RecipeIngredientsDisplayService.handleActionUpdateRecipeWidgets(getContext(), recipe.getName(), widgetIngredients.toString());
 
             List<Step> steps = recipe.getSteps();
@@ -220,8 +218,7 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
             adapter.notifyDataSetChanged();
         }
         else if (adapter != null) {
-            // single-pane layout doesn't need highlighting
-            //Log.v(TAG, "RecipeStepsListAdapter highlighting not allowed in single-pane layout");
+            // single-pane layout doesn't need highlighting, so do nothing
         } else {
             Log.e(TAG, "RecipeStepsListAdapter is null");
         }
@@ -232,26 +229,4 @@ public class RecipeStepsListFragment extends Fragment implements RecipeStepsList
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_HIGHLIGHTED_POSITION, highlightedPosition);
     }
-
-    /**
-     * Update recipe widget ingredients list to match the selected Recipe
-     */
-    //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    /*public static void handleActionUpdateRecipeWidgets(Context context, String recipeName, String ingredients)
-    {
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        ComponentName name = new ComponentName(context, RecipeWidget.class);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(name);
-
-        // Trigger the data update to handle the widget ingredient text and force a data refresh
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.appwidget_text);
-
-        // Update all widgets
-        RecipeWidget.updateRecipeWidgets(context, appWidgetManager,
-                recipeName, ingredients, appWidgetIds);
-
-        Log.d(TAG, "updated recipe widget");
-        //Log.d(TAG, "updated recipe widget with recipe: " + recipeName );
-        //Log.d(TAG, "ingredients: " + ingredients);
-    }*/
 }

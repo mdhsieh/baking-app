@@ -24,7 +24,5 @@ public class RecipeIngredientsDisplayService {
         // Update all widgets
         RecipeWidget.updateRecipeWidgets(context, appWidgetManager,
                 recipeName, ingredients, appWidgetIds);
-
-        Log.d(TAG, "updated recipe widget");
     }
 }

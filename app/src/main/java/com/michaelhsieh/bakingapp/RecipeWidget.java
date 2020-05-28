@@ -18,27 +18,18 @@ public class RecipeWidget extends AppWidgetProvider {
 
     private static final String TAG = RecipeWidget.class.getSimpleName();
 
-    /* static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) { */
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 String recipeName, String ingredients, int appWidgetId) {
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
 
-        //CharSequence widgetText = context.getString(R.string.default_ingredients_list_text);
-        //views.setTextViewText(R.id.appwidget_text, widgetText);
         // if no recipe was selected yet, don't set the widget text
         // set the widget text to display the selected recipe's ingredients
         if (!recipeName.isEmpty())
         {
             String widgetText = recipeName + "\n" + "\n" + ingredients;
             views.setTextViewText(R.id.appwidget_text, widgetText);
-            Log.d(TAG, "set widget text to: " + widgetText);
-        }
-        else
-        {
-            Log.d(TAG, "no recipe selected");
         }
 
         // Create an Intent to launch MainActivity
@@ -55,9 +46,6 @@ public class RecipeWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
-        /*for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
-        } */
 
         // When the first widget is created, allow
         // user to open up MainActivity when clicked
@@ -74,12 +62,10 @@ public class RecipeWidget extends AppWidgetProvider {
 
             // don't use RecipeWidget's updateAppWidget in onUpdate because
             // we only update widgets when user selects a recipe
-            //updateAppWidget(context, appWidgetManager, "", "", appWidgetId);
 
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
-        //Log.d(TAG,"onUpdate");
     }
 
     /**

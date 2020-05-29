@@ -50,13 +50,11 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         CurrentActivity.this.finish();
 
         This will clear the stack */
-        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
         //PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        //PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        //PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         // Widgets allow click handlers to only launch pending intents
         views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);
@@ -81,13 +79,11 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
             any previously opened Activities. If the user presses the back button, he/she should
             immediately be brought back to the home screen.
              */
-            //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
             //PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            //PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+            //PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
             // Get the layout for the Recipe Widget and attach an on-click listener
             // to the button

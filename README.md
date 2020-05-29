@@ -6,7 +6,7 @@ This app uses the Retrofit library to retrieve online recipes.
 It also uses version 3.12.0 of the OkHttp library to support backwards compatibility on older devices below Android 5.0 (API 21).
 
 ## Installation
-If you have Git and Android Studio installed, use:
+If you have Git and Android Studio installed, type:
 ```
 git clone https://github.com/mdhsieh/baking-app.git
 ```

@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.contrib.RecyclerViewActions;
@@ -37,11 +38,16 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class IdlingResourceMainActivityTest {
 
-    private static final String RECIPE_NAME = "Nutella Pie";
+    /*private static final String RECIPE_NAME = "Nutella Pie";
     private static final int RECIPE_POS = 0;
     private static final String RECIPE_STEP = "Recipe Introduction";
     private static final int RECIPE_STEP_POS = 0;
-    private static final String STEP_DESC = "Recipe Introduction";
+    private static final String STEP_DESC = "Recipe Introduction";*/
+    private static final String RECIPE_NAME = "Cheesecake";
+    private static final int RECIPE_POS = 3;
+    private static final String RECIPE_STEP = "Final cooling and set.";
+    private static final int RECIPE_STEP_POS = 12;
+    private static final String STEP_DESC = "12. Cover the cheesecake with plastic wrap, not allowing the plastic to touch the top of the cake, and refrigerate it for at least 8 hours. Then it's ready to serve!";
 
     /**
      * The ActivityTestRule is a rule provided by Android used for functional testing of a single
@@ -81,6 +87,9 @@ public class IdlingResourceMainActivityTest {
                 .perform(RecyclerViewActions.actionOnItemAtPosition(RECIPE_STEP_POS, click()));
         // then check the recipe step's full description
         onView(withId(R.id.tv_step_long_desc)).check(matches(withText(STEP_DESC)));
+
+        // go back
+        Espresso.pressBack();
     }
 
     // Remember to unregister resources when not needed to avoid malfunction.

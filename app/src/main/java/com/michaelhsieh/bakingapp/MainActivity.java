@@ -1,9 +1,12 @@
 package com.michaelhsieh.bakingapp;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.espresso.IdlingResource;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -15,6 +18,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.michaelhsieh.bakingapp.IdlingResource.SimpleIdlingResource;
 import com.michaelhsieh.bakingapp.model.Recipe;
 import com.michaelhsieh.bakingapp.network.GetDataService;
 import com.michaelhsieh.bakingapp.network.RetrofitClientInstance;
@@ -26,6 +30,10 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Ite
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    // The Idling Resource which will be null in production.
+    @Nullable
+    private SimpleIdlingResource idlingResource;
+
     // Recipe key when sending Intent
     private static final String EXTRA_RECIPE = "Recipe";
 
@@ -34,10 +42,28 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Ite
 
     private ProgressBar loadingIndicator;
 
+    /**
+     * Only called from test, creates and returns a new {@link SimpleIdlingResource}.
+     */
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource()
+    {
+        if (idlingResource == null)
+        {
+            idlingResource = new SimpleIdlingResource();
+        }
+
+        return idlingResource;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Get the IdlingResource instance
+        getIdlingResource();
 
         // show that the recipes are loading
         loadingIndicator = findViewById(R.id.pb_loading);

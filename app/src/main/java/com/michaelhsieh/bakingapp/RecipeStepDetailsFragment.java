@@ -249,8 +249,6 @@ public class RecipeStepDetailsFragment extends Fragment {
                     getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
             mExoplayer.prepare(mediaSource);
             mExoplayer.setPlayWhenReady(true);
-
-            Log.d(TAG, "initialized ExoPlayer");
         }
     }
 
@@ -263,8 +261,6 @@ public class RecipeStepDetailsFragment extends Fragment {
             mExoplayer.stop();
             mExoplayer.release();
             mExoplayer = null;
-
-            Log.d(TAG, "released ExoPlayer");
         }
     }
 

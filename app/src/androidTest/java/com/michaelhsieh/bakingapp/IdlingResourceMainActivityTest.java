@@ -2,8 +2,6 @@ package com.michaelhsieh.bakingapp;
 
 import android.view.View;
 
-import com.michaelhsieh.bakingapp.model.Recipe;
-
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.After;
@@ -21,17 +19,13 @@ import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.instanceOf;
 
 /**
  * This test demos a user clicking on a RecyclerView item in MainActivity which opens up the
@@ -42,8 +36,11 @@ import static org.hamcrest.Matchers.instanceOf;
  */
 @RunWith(AndroidJUnit4.class)
 public class IdlingResourceMainActivityTest {
+
     private static final String RECIPE_NAME = "Nutella Pie";
+    private static final int RECIPE_POS = 0;
     private static final String RECIPE_STEP = "Recipe Introduction";
+    private static final int RECIPE_STEP_POS = 0;
     private static final String STEP_DESC = "Recipe Introduction";
 
     /**
@@ -70,26 +67,20 @@ public class IdlingResourceMainActivityTest {
 
     @Test
     public void idlingResourceTest() {
-        //onView(withId(R.id.rv_recipes))
-        //        .check(matches(hasDescendant(withText(RECIPE_NAME))));
-
         // check the name of a recipe card and click on that recipe card
         onView(withId(R.id.rv_recipes))
-                .perform(scrollToPosition(0))
-                .check(matches(atPosition(0, hasDescendant(withText(RECIPE_NAME)))));
+                .perform(scrollToPosition(RECIPE_POS))
+                .check(matches(atPosition(RECIPE_POS, hasDescendant(withText(RECIPE_NAME)))));
         onView(withId(R.id.rv_recipes))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+                .perform(RecyclerViewActions.actionOnItemAtPosition(RECIPE_POS, click()));
         // check the short description of a recipe step and click the recipe step
         onView(withId(R.id.rv_recipe_steps))
-                .perform(scrollToPosition(0))
-                .check(matches(atPosition(0, hasDescendant(withText(RECIPE_STEP)))));
+                .perform(scrollToPosition(RECIPE_STEP_POS))
+                .check(matches(atPosition(RECIPE_STEP_POS, hasDescendant(withText(RECIPE_STEP)))));
         onView(withId(R.id.rv_recipe_steps))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+                .perform(RecyclerViewActions.actionOnItemAtPosition(RECIPE_STEP_POS, click()));
         // then check the recipe step's full description
         onView(withId(R.id.tv_step_long_desc)).check(matches(withText(STEP_DESC)));
-
-        // onData(anything()).inAdapterView(withId(R.id.rv_recipes)).atPosition(0).perform(click());
-        //onView(withId(R.id.tea_name_text_view)).check(matches(withText(TEA_NAME)));
     }
 
     // Remember to unregister resources when not needed to avoid malfunction.
@@ -101,7 +92,7 @@ public class IdlingResourceMainActivityTest {
     }
 
     /** Method to test item in RecyclerView at a given position.
-     *
+     * Source: https://stackoverflow.com/questions/31394569/how-to-assert-inside-a-recyclerview-in-espresso
      */
     public static Matcher<View> atPosition(final int position, @NonNull final Matcher<View> itemMatcher) {
         return new BoundedMatcher<View, RecyclerView>(RecyclerView.class) {

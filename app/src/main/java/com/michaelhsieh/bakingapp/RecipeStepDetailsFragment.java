@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
@@ -43,6 +44,11 @@ public class RecipeStepDetailsFragment extends Fragment {
 
     private static final String TAG = RecipeStepDetailsFragment.class.getSimpleName();
 
+    // key to store player position in bundle
+    private static final String KEY_PLAYER_POSITION = "player_position";
+    // key to store player state in bundle, which is playing or paused
+    private static final String KEY_PLAYER_STATE = "player_state";
+
     // parameter argument with name that matches
     // the fragment initialization parameters
     private static final String ARG_STEPS = "Steps";
@@ -55,6 +61,12 @@ public class RecipeStepDetailsFragment extends Fragment {
     private int listItemIndex;
     // parameter of type boolean to hide buttons in single-pane and show buttons in two-pane case
     private boolean hideButtons;
+
+    // player position
+    private long playerPosition = C.TIME_UNSET;
+    // whether the player is playing or paused
+    // default true
+    private boolean isPlayWhenReady = true;
 
     private SimpleExoPlayerView mPlayerView;
     private SimpleExoPlayer mExoplayer;
@@ -158,6 +170,14 @@ public class RecipeStepDetailsFragment extends Fragment {
         // Initialize the player view.
         mPlayerView = (SimpleExoPlayerView) rootView.findViewById(R.id.playerView);
 
+        // get the saved position of the player if there is one
+        if (savedInstanceState != null) {
+            playerPosition = savedInstanceState.getLong(KEY_PLAYER_POSITION);
+            isPlayWhenReady = savedInstanceState.getBoolean(KEY_PLAYER_STATE, isPlayWhenReady);
+            Log.d(TAG,"retrieved position: " + playerPosition);
+            Log.d(TAG,"retrieved play when ready: " + playerPosition);
+        }
+
         // Initialize the player.
         // get selected step's video URL
         String videoUrl = steps.get(listItemIndex).getVideoURL();
@@ -233,6 +253,8 @@ public class RecipeStepDetailsFragment extends Fragment {
         if (mExoplayer == null)
         {
 
+            Log.d(TAG, "initialized player");
+
             if (getContext() == null) {
                 throw new RuntimeException("null returned from getContext()");
             }
@@ -248,7 +270,16 @@ public class RecipeStepDetailsFragment extends Fragment {
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
             mExoplayer.prepare(mediaSource);
-            mExoplayer.setPlayWhenReady(true);
+
+            // if position was saved from orientation change, set the player to that position
+            if (playerPosition != C.TIME_UNSET) {
+                mExoplayer.seekTo(playerPosition);
+                Log.d(TAG, "go to saved position: " + playerPosition);
+            }
+            Log.d(TAG, "can play when ready: " + isPlayWhenReady);
+
+            // mExoplayer.setPlayWhenReady(true);
+            mExoplayer.setPlayWhenReady(isPlayWhenReady);
         }
     }
 
@@ -258,9 +289,16 @@ public class RecipeStepDetailsFragment extends Fragment {
     private void releasePlayer()
     {
         if (mExoplayer != null) {
+            // save the ExoPlayer's position in case there's an orientation change
+            playerPosition = mExoplayer.getCurrentPosition();
+            Log.d(TAG, "player position: " + playerPosition);
+            isPlayWhenReady = mExoplayer.getPlayWhenReady();
+            Log.d(TAG, "play when ready: " + isPlayWhenReady);
             mExoplayer.stop();
             mExoplayer.release();
             mExoplayer = null;
+
+            Log.d(TAG, "released player");
         }
     }
 
@@ -277,5 +315,16 @@ public class RecipeStepDetailsFragment extends Fragment {
     public void onPause() {
         super.onPause();
         releasePlayer();
+    }
+
+    /* Save the player's current position and whether the player is
+    playing or paused if there's an orientation change. */
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        // call superclass to save any view hierarchy
+        super.onSaveInstanceState(outState);
+
+        outState.putLong(KEY_PLAYER_POSITION, playerPosition);
+        outState.putBoolean(KEY_PLAYER_STATE, isPlayWhenReady);
     }
 }

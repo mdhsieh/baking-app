@@ -30,6 +30,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--Use launchMode="singleTop" to resume this Activity in onResume instead of recreating
+        the Activity when the up button is pressed.
+        This is done because the Activity's state should be kept.-->
         <activity android:name=".DetailActivity"
             android:parentActivityName=".MainActivity"
             android:launchMode="singleTop"/>

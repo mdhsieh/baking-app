@@ -46,7 +46,7 @@ public class RecipeStepDetailsFragment extends Fragment {
 
     // key to store player position in bundle
     private static final String KEY_PLAYER_POSITION = "player_position";
-    // key to store player state in bundle, which is playing or paused
+    // key to store player state in bundle, which is either playing or paused
     private static final String KEY_PLAYER_STATE = "player_state";
 
     // parameter argument with name that matches
@@ -174,8 +174,6 @@ public class RecipeStepDetailsFragment extends Fragment {
         if (savedInstanceState != null) {
             playerPosition = savedInstanceState.getLong(KEY_PLAYER_POSITION);
             isPlayWhenReady = savedInstanceState.getBoolean(KEY_PLAYER_STATE, isPlayWhenReady);
-            Log.d(TAG,"retrieved position: " + playerPosition);
-            Log.d(TAG,"retrieved play when ready: " + playerPosition);
         }
 
         // Initialize the player.
@@ -252,9 +250,6 @@ public class RecipeStepDetailsFragment extends Fragment {
     {
         if (mExoplayer == null)
         {
-
-            Log.d(TAG, "initialized player");
-
             if (getContext() == null) {
                 throw new RuntimeException("null returned from getContext()");
             }
@@ -274,11 +269,7 @@ public class RecipeStepDetailsFragment extends Fragment {
             // if position was saved from orientation change, set the player to that position
             if (playerPosition != C.TIME_UNSET) {
                 mExoplayer.seekTo(playerPosition);
-                Log.d(TAG, "go to saved position: " + playerPosition);
             }
-            Log.d(TAG, "can play when ready: " + isPlayWhenReady);
-
-            // mExoplayer.setPlayWhenReady(true);
             mExoplayer.setPlayWhenReady(isPlayWhenReady);
         }
     }
@@ -291,14 +282,10 @@ public class RecipeStepDetailsFragment extends Fragment {
         if (mExoplayer != null) {
             // save the ExoPlayer's position in case there's an orientation change
             playerPosition = mExoplayer.getCurrentPosition();
-            Log.d(TAG, "player position: " + playerPosition);
             isPlayWhenReady = mExoplayer.getPlayWhenReady();
-            Log.d(TAG, "play when ready: " + isPlayWhenReady);
             mExoplayer.stop();
             mExoplayer.release();
             mExoplayer = null;
-
-            Log.d(TAG, "released player");
         }
     }
 

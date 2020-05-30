@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Ite
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
                 // finished loading
                 loadingIndicator.setVisibility(View.GONE);
-                Toast.makeText(MainActivity.this, "Something went wrong. Please try again later!", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, R.string.loading_error, Toast.LENGTH_LONG).show();
                 if (t instanceof IOException) {
                     // A network failure. Inform the user and possibly retry.
                     Log.e(TAG, "network failure occurred");
@@ -113,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Ite
         // smaller devices have one column and tablets have two columns of Recipes
         final int columns = getResources().getInteger(R.integer.recipe_columns);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, columns, RecyclerView.VERTICAL, false);
-        //RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }

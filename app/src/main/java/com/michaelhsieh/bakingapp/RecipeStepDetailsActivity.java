@@ -43,6 +43,13 @@ public class RecipeStepDetailsActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_step_details);
 
+        // enable the up button so users can navigate back from this screen
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } else {
+            Log.e(TAG, "action bar is null");
+        }
+
         Intent intent = getIntent();
         // get the ArrayList of Steps from the Intent that started this Activity
         steps = intent.getParcelableArrayListExtra(EXTRA_STEPS);
